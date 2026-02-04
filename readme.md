@@ -42,18 +42,3 @@ Luego de analizar el problema, justifique por qué el uso de la tecnología y la
 En la introducción incluya al menos <b>4 referencias</b>, puede ubicarlas en la introducción o en la justificación. Recuerde que una referencia puede dar fuerza a un argumento o evoca el <b>estado del arte</b> de un área de trabajo específico.
 
 
-# Equipos
-
-## EQUIPO 1: 
-- Angela
-- Melo
-- Arias
-- Molina
-- Pacheco
-
-## EQUIPO 2:
-- Guarin
-- Pérez
-- Garzón
-- Trujillo
-- Polanco
