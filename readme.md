@@ -19,7 +19,7 @@ WIFI: F0rmul4-1
       </a>
     </td>
     <td style="vertical-align: middle;">
-      <a href="https://chat.whatsapp.com/GgM9Kifnlq66pt0xzppU2I">Grupo de Whatsapp</a>
+      <a href="https://chat.whatsapp.com/GueCQdwJEXa1eyrYnmuNgN">Grupo de Whatsapp</a>
     </td>
   </tr>
 </table>
