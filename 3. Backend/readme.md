@@ -23,7 +23,20 @@ En este caso, este servidor ofrecerá los archivos que estén contenidos en el f
 
 # HTTP 
 
-En el <a href="https://datatracker.ietf.org/doc/html/rfc1945">RCF 1945</a> está el esquema de response de un servidor HTTP. 
+En el <a href="https://datatracker.ietf.org/doc/html/rfc1945">RCF 1945</a> está el esquema de request y response de un servidor HTTP. 
+
+### Request
+```
+GET /index.html HTTP/1.0\r\n
+Host: www.ejemplo.com\r\n
+User-Agent: Mozilla/5.0\r\n
+Accept: text/html\r\n
+Connection: close\r\n
+\r\n
+Body del mensaje usualmente JSON
+```
+
+### Response 
 ```
 HTTP/1.0 200 OK\r\n
 Content-Type: text/html\r\n
@@ -32,4 +45,3 @@ Connection: close\r\n
 \r\n
 <html><body>Hola Mundo</body></html>
 ```
-Donde CRLF es `\r\n`
