@@ -66,6 +66,10 @@ Si da problemas de permisos, primero
 ```
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
+En Windows CMD
+```
+venv\Scripts\activate
+```
 
 Instalemos las dependencias necesarioas
 ```
