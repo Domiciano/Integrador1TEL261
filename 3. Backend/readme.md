@@ -106,13 +106,6 @@ def sumar(a: int, b: int):
 def mostrar_html():
     return FileResponse("index.html")
 
-
-# POST que recibe usuario y password
-@app.post("/login")
-def login(username: str = Form(...), password: str = Form(...)):
-    print("Usuario:", username)
-    print("Password:", password)
-    return {"mensaje": "Datos recibidos en consola"}
 ```
 
 Para ejecutarlo
