@@ -71,6 +71,11 @@ En Windows CMD
 venv\Scripts\activate
 ```
 
+Para desactivarlo use
+```
+deactivate
+```
+
 Instalemos las dependencias necesarioas
 ```
 pip install fastapi uvicorn
