@@ -81,7 +81,7 @@ Instalemos las dependencias necesarioas
 pip install fastapi uvicorn python-multipart
 ```
 
-Luego vamos a crear un primer template para analizar 
+Luego vamos a crear `server.py`
 ```python
 from fastapi import FastAPI, Form
 from fastapi.responses import HTMLResponse, FileResponse
@@ -113,4 +113,9 @@ def login(username: str = Form(...), password: str = Form(...)):
     print("Usuario:", username)
     print("Password:", password)
     return {"mensaje": "Datos recibidos en consola"}
+```
+
+Para ejecutarlo
+```
+uvicorn main:app --reload
 ```
