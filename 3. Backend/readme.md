@@ -47,6 +47,26 @@ Connection: close\r\n
 ```
 
 # Servidor de Aplicaciones
+
+Creemos un virtual enviroment de python 
+```
+python -m venv venv
+```
+Eso crea la carpeta `venv`
+
+Para activar el environment en Linux/Mac OS
+```
+source venv/bin/activate
+```
+Y en windows (powershell)
+```
+venv\Scripts\Activate.ps1
+```
+Si da problemas de permisos, primero
+```
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
 Instalemos las dependencias necesarioas
 ```
 pip install fastapi uvicorn
