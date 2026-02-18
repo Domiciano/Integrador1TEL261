@@ -78,7 +78,7 @@ deactivate
 
 Instalemos las dependencias necesarioas
 ```
-pip install fastapi uvicorn
+pip install fastapi uvicorn python-multipart
 ```
 
 Luego vamos a crear un primer template para analizar 
