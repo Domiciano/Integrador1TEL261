@@ -45,3 +45,43 @@ Connection: close\r\n
 \r\n
 <html><body>Hola Mundo</body></html>
 ```
+
+# Servidor de Aplicaciones
+Instalemos las dependencias necesarioas
+```
+pip install fastapi uvicorn
+```
+
+Luego vamos a crear un primer template para analizar 
+```python
+from fastapi import FastAPI, Form
+from fastapi.responses import HTMLResponse, FileResponse
+from datetime import datetime
+
+app = FastAPI()
+
+# GET que devuelve la hora del sistema
+@app.get("/hora")
+def obtener_hora():
+    return {"hora": datetime.now().strftime("%H:%M:%S")}
+
+
+# GET que suma dos números
+@app.get("/sumar")
+def sumar(a: int, b: int):
+    return {"resultado": a + b}
+
+
+# GET que devuelve un archivo HTML de la raíz
+@app.get("/", response_class=HTMLResponse)
+def mostrar_html():
+    return FileResponse("index.html")
+
+
+# POST que recibe usuario y password
+@app.post("/login")
+def login(username: str = Form(...), password: str = Form(...)):
+    print("Usuario:", username)
+    print("Password:", password)
+    return {"mensaje": "Datos recibidos en consola"}
+```
