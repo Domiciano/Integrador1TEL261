@@ -112,3 +112,38 @@ Para ejecutarlo
 ```
 uvicorn main:app --reload
 ```
+
+# Parámetros en una URL
+Cuando un cliente hace una petición HTTP, puede enviar información adicional en la URL.
+Existen dos formas comunes de hacerlo: Query Parameters, Path Parameters
+
+## Query Parameters
+Son parámetros que se envían después del signo ? en la URL y se separan con &.
+
+Ejemplo de URL
+```
+http://localhost:8000/sumar?a=5&b=3
+```
+En FastAPI se definen como parámetros normales en la función:
+
+```python
+@app.get("/sumar")
+def sumar(a: int, b: int):
+    return {"resultado": a + b}
+```
+En este caso a y b son query parameters. FastAPI los convierte automáticamente al tipo indicado (int). Si falta uno, FastAPI genera un error automáticamente
+
+# Path Parameters
+Son parámetros que hacen parte de la ruta misma.
+
+Ejemplo de URL
+```
+http://localhost:8000/sensor/10
+```
+En FastAPI se definen usando llaves `{}` en la ruta
+```pyhton
+@app.get("/sensor/{id}")
+def obtener_sensor(id: int):
+    return {"sensor_id": id}
+```
+Aquí `{id}` es un path parameter. El valor se extrae directamente de la URL. También se convierte automáticamente al tipo indicado
