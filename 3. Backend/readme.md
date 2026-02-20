@@ -141,7 +141,7 @@ Ejemplo de URL
 http://localhost:8000/sensor/10
 ```
 En FastAPI se definen usando llaves `{}` en la ruta
-```pyhton
+```python
 @app.get("/sensor/{id}")
 def obtener_sensor(id: int):
     return {"sensor_id": id}
