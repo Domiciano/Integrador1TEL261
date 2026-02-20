@@ -204,4 +204,4 @@ from fastapi.responses import FileResponse
 def raiz():
     return FileResponse("static/alfa.html")
 ```
-En este caso, se sirve el archivo con el alias `alias`
+En este caso, se sirve el archivo con el alias `alias` en la URL http://localhost:8000/alias
