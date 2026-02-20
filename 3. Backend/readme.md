@@ -205,3 +205,9 @@ def raiz():
     return FileResponse("static/alfa.html")
 ```
 En este caso, se sirve el archivo con el alias `alias` en la URL http://localhost:8000/alias
+
+# Recopilar dependencias
+Para guardar en un archivo la lista exacta de dependencias y sus versiones, de modo que puedan reinstalarse igual en otra máquina usando pip install -r requirements.txt.
+```
+pip freeze > requirements.txt
+```
