@@ -60,6 +60,10 @@ Para activar el environment en Linux/Mac OS
 ```
 source venv/bin/activate
 ```
+En Windows CMD
+```
+venv\Scripts\activate
+```
 Y en windows (powershell)
 ```
 venv\Scripts\Activate.ps1
@@ -68,16 +72,10 @@ Si da problemas de permisos, primero
 ```
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
-En Windows CMD
-```
-venv\Scripts\activate
-```
-
-Para desactivarlo use
+Para desactivar el `venv` use
 ```
 deactivate
 ```
-
 Instalemos las dependencias necesarioas
 ```
 pip install fastapi uvicorn python-multipart
