@@ -198,6 +198,8 @@ Aquí deberá tener una carpeta de 'static' en la raíz del proyecto.
 
 A partir de esto se puede dar rutas a las diferentes páginas usando
 ```python
+from fastapi.responses import FileResponse
+...
 @app.get("/alias")
 def raiz():
     return FileResponse("static/alfa.html")
