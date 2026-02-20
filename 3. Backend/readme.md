@@ -25,6 +25,8 @@ En este caso, este servidor ofrecerá los archivos que estén contenidos en el f
 
 En el <a href="https://datatracker.ietf.org/doc/html/rfc1945">RCF 1945</a> está el esquema de request y response de un servidor HTTP. 
 
+<img src="https://i2thub.icesi.edu.co:5443/compu2/assets/image2-B7B2EaGa.png">
+
 ### Request
 ```
 GET /index.html HTTP/1.0\r\n
