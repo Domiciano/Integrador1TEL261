@@ -194,4 +194,12 @@ app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 ```
-Aquí deberá tener una carpeta de 'static' en la raíz del proyecto
+Aquí deberá tener una carpeta de 'static' en la raíz del proyecto.
+
+A partir de esto se puede dar rutas a las diferentes páginas usando
+```python
+@app.get("/alias")
+def raiz():
+    return FileResponse("static/alfa.html")
+```
+En este caso, se sirve el archivo con el alias `alias`
