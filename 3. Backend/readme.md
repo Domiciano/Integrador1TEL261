@@ -147,3 +147,51 @@ def obtener_sensor(id: int):
     return {"sensor_id": id}
 ```
 Aquí `{id}` es un path parameter. El valor se extrae directamente de la URL. También se convierte automáticamente al tipo indicado
+
+# Responses estándar
+Por defecto se responde un diccionario desde cualquier método de python, esto se transforma automáticament en JSON. Sin embargo habrán momentos que puede ser que requiera responder un HTML.
+
+## On-the-fly
+Puede responder una página usando
+```python
+from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
+from datetime import datetime
+
+app = FastAPI()
+
+@app.get("/dinamico", response_class=HTMLResponse)
+def respuesta_dinamica():
+    html = f"""
+    <html>
+        <body>
+            <h1>Hora actual</h1>
+            <p>{datetime.now()}</p>
+        </body>
+    </html>
+    """
+    return html
+```
+Con esto, usted no está usando la memoria de almacenamiento, sólo la RAM
+
+## Un recurso estático
+
+```python
+from fastapi.responses import FileResponse
+
+@app.get("/", response_class=HTMLResponse)
+def mostrar_html():
+    return FileResponse("index.html")
+```
+
+## Una carpeta de recursos estática
+Si quiere servir toda una carpeta puede hacer
+```python
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+
+app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+```
+Aquí deberá tener una carpeta de 'static' en la raíz del proyecto
