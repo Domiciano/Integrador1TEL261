@@ -50,7 +50,7 @@ Connection: close\r\n
 
 # Servidor de Aplicaciones
 
-Creemos un virtual enviroment de python 
+Creemos un virtual enviroment de python. Un `venv` (virtual environment) en Python es un entorno virtual aislado que permite instalar y gestionar dependencias (librerías y versiones de paquetes) de manera independiente para cada proyecto. Esto evita conflictos entre proyectos que necesitan versiones distintas de las mismas librerías y mantiene el entorno global de Python limpio. Básicamente, es como crear una “mini instalación” de Python específica para un proyecto.
 ```
 python -m venv venv
 ```
