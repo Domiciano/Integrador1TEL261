@@ -148,7 +148,7 @@ def obtener_sensor(id: int):
 ```
 Aquí `{id}` es un path parameter. El valor se extrae directamente de la URL. También se convierte automáticamente al tipo indicado
 
-# Responses estándar
+# Responses HTML
 Por defecto se responde un diccionario desde cualquier método de python, esto se transforma automáticament en JSON. Sin embargo habrán momentos que puede ser que requiera responder un HTML.
 
 ## On-the-fly
