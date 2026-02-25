@@ -103,6 +103,7 @@ class Student(Base):
     name = Column(String)
     age = Column(Integer)
 ```
+Puede usar otros tipos de datos como `Float`, `BigInteger`, `DateTime`
 
 Finalmente pongamos un trigger, que cuando la app de fastapi arranque, entonces se generen las tablas
 
