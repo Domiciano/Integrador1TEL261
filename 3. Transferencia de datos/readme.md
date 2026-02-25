@@ -113,5 +113,42 @@ def on_startup():
     Base.metadata.create_all(bind=engine)
 ```
 
+## Almacenar los datos
+
+Para almacenar finalmente debemos tener una sesión con la base de datos
+
+```pyhton
+from sqlalchemy.orm import sessionmaker
+...
+SessionLocal = sessionmaker(bind=engine)
+```
+Luego debemos hacer el almacenamiento por medio de la sesión en el `POST`
+
+```python
+@app.post("/readings")
+def register_reading(reading: Reading):
+    db = SessionLocal()
+
+    # Hacemos el mapeo
+    db_reading = ReadingDB(
+        deviceId=reading.deviceId,
+        value=reading.value,
+        unit=reading.unit
+    )
+
+    # Agregamos a la base de datos
+    db.add(db_reading)
+    db.commit()
+    db.refresh(db_reading)
+
+    # Cerramos la transacción
+    db.close()
+
+    # Escribimos la respuesta
+    return {
+        "message": "Medida guardada",
+        "data": db_reading.id
+    }
+```
 
 
