@@ -183,5 +183,100 @@ def register_readings_batch(readings: list[Reading]):
         "data": [r.id for r in db_readings]
     }
 ```
+--
+# Notas sobre listas en python
+Las listas (list) son una de las estructuras de datos más importantes en Python. Permiten almacenar múltiples elementos en orden, y son especialmente útiles cuando se reciben múltiples mediciones (batch) desde dispositivos como un ESP32.
 
+Crear una lista
+```
+numbers = [10, 20, 30, 40]
+devices = ["dev-01", "dev-02", "dev-03"]
+```
+También puede crear una lista vacía:
+```
+readings = []
+```
+Acceder a elementos
 
+Cada elemento tiene una posición (índice), empezando desde 0.
+
+```
+numbers = [10, 20, 30]
+
+print(numbers[0])  # 10
+print(numbers[1])  # 20
+print(numbers[2])  # 30
+print(numbers[-1])  # 40
+```
+Agregar elementos
+
+Puede agregar elementos usando append():
+```
+readings = []
+
+readings.append(25)
+readings.append(26)
+readings.append(27)
+
+print(readings)
+# [25, 26, 27]
+```
+Recorrer una lista
+
+Esto es extremadamente importante cuando trabajamos con batch:
+```
+readings = [25, 26, 27]
+
+for r in readings:
+    print(r)
+```
+Salida
+```
+25
+26
+27
+```
+Recorrer lista de objetos
+
+Esto es exactamente lo que hacemos en FastAPI con batch:
+```
+readings = [
+    {"deviceId": "dev-01", "value": 25},
+    {"deviceId": "dev-01", "value": 26}
+]
+
+for r in readings:
+    print(r["deviceId"], r["value"])
+Obtener el tamaño de una lista
+readings = [25, 26, 27]
+
+print(len(readings))  # 3
+```
+Esto es útil en FastAPI:
+```
+return {
+    "total": len(readings)
+}
+```
+List comprehension
+
+Es una forma compacta de construir listas:
+```
+numbers = [1, 2, 3, 4]
+
+squared = [n*n for n in numbers]
+
+print(squared)
+# [1, 4, 9, 16]
+```
+Este mismo patrón se usa en SQLAlchemy:
+```
+db_readings = [
+    ReadingDB(
+        deviceId=r.deviceId,
+        value=r.value,
+        unit=r.unit
+    )
+    for r in readings
+]
+```
