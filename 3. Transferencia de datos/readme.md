@@ -117,7 +117,7 @@ def on_startup():
 
 Para almacenar finalmente debemos tener una sesión con la base de datos
 
-```pyhton
+```python
 from sqlalchemy.orm import sessionmaker
 ...
 SessionLocal = sessionmaker(bind=engine)
