@@ -188,19 +188,19 @@ def register_readings_batch(readings: list[Reading]):
 Las listas (list) son una de las estructuras de datos más importantes en Python. Permiten almacenar múltiples elementos en orden, y son especialmente útiles cuando se reciben múltiples mediciones (batch) desde dispositivos como un ESP32.
 
 Crear una lista
-```
+```python
 numbers = [10, 20, 30, 40]
 devices = ["dev-01", "dev-02", "dev-03"]
 ```
 También puede crear una lista vacía:
-```
+```python
 readings = []
 ```
 Acceder a elementos
 
 Cada elemento tiene una posición (índice), empezando desde 0.
 
-```
+```python
 numbers = [10, 20, 30]
 
 print(numbers[0])  # 10
@@ -211,7 +211,7 @@ print(numbers[-1])  # 40
 Agregar elementos
 
 Puede agregar elementos usando append():
-```
+```python
 readings = []
 
 readings.append(25)
@@ -224,7 +224,7 @@ print(readings)
 Recorrer una lista
 
 Esto es extremadamente importante cuando trabajamos con batch:
-```
+```python
 readings = [25, 26, 27]
 
 for r in readings:
@@ -239,7 +239,7 @@ Salida
 Recorrer lista de objetos
 
 Esto es exactamente lo que hacemos en FastAPI con batch:
-```
+```python
 readings = [
     {"deviceId": "dev-01", "value": 25},
     {"deviceId": "dev-01", "value": 26}
@@ -253,7 +253,7 @@ readings = [25, 26, 27]
 print(len(readings))  # 3
 ```
 Esto es útil en FastAPI:
-```
+```python
 return {
     "total": len(readings)
 }
@@ -261,7 +261,7 @@ return {
 List comprehension
 
 Es una forma compacta de construir listas:
-```
+```python
 numbers = [1, 2, 3, 4]
 
 squared = [n*n for n in numbers]
@@ -270,7 +270,7 @@ print(squared)
 # [1, 4, 9, 16]
 ```
 Este mismo patrón se usa en SQLAlchemy:
-```
+```python
 db_readings = [
     ReadingDB(
         deviceId=r.deviceId,
