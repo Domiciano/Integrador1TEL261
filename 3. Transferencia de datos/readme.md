@@ -151,4 +151,37 @@ def register_reading(reading: Reading):
     }
 ```
 
+## Almacenar un batch
+
+```python
+@app.post("/readings/batch")
+def register_readings_batch(readings: list[Reading]):
+    db = SessionLocal()
+
+    # Mapear lista
+    db_readings = [
+        ReadingDB(
+            deviceId=r.deviceId,
+            value=r.value,
+            unit=r.unit
+        )
+        for r in readings
+    ]
+
+    # Insertar en bloque
+    db.add_all(db_readings)
+    db.commit()
+
+    # Obtener IDs generados
+    for r in db_readings:
+        db.refresh(r)
+
+    db.close()
+
+    return {
+        "message": f"{len(db_readings)} medidas guardadas",
+        "data": [r.id for r in db_readings]
+    }
+```
+
 
