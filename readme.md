@@ -53,7 +53,7 @@ subgraph Client
 end
 
 subgraph Backend
-    C[Spring Boot API]
+    C[FastAPI]
     D[(PostgreSQL)]
 end
 
