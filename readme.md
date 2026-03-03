@@ -41,4 +41,32 @@ Luego de analizar el problema, justifique por qué el uso de la tecnología y la
 ## 4. Referencias
 En la introducción incluya al menos <b>4 referencias</b>, puede ubicarlas en la introducción o en la justificación. Recuerde que una referencia puede dar fuerza a un argumento o evoca el <b>estado del arte</b> de un área de trabajo específico.
 
+```mermaid
+flowchart LR
+
+subgraph Edge
+    A[ESP32]
+end
+
+subgraph Client
+    B[Web App]
+end
+
+subgraph Backend
+    C[Spring Boot API]
+    D[(PostgreSQL)]
+end
+
+subgraph Messaging
+    E[MQTT Broker]
+end
+
+A --> C
+B --> C
+C --> D
+
+E --> A
+E --> B
+```
+
 
