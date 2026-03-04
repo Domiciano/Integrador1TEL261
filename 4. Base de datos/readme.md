@@ -8,15 +8,7 @@
 Guarde el siguiente archivo como `docker-compose.yml`
 
 ``` bash
-docker run -d \
-  --name db \
-  --platform linux/x86_64 \
-  -e POSTGRES_DB=db \
-  -e POSTGRES_USER=user \
-  -e POSTGRES_PASSWORD=password \
-  -p 5432:5432 \
-  -v my-db:/var/lib/postgresql/data \
-  postgres:17
+docker run -d --name db --platform linux/x86_64 -e POSTGRES_DB=db -e POSTGRES_USER=user -e POSTGRES_PASSWORD=password -p 5432:5432 -v my-db:/var/lib/postgresql/data postgres:17
 ```
 
 Con esto tendrá una base de datos local en `127.0.0.1:5432`.\
