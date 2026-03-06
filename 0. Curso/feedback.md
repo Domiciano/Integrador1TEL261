@@ -12,9 +12,9 @@
 
 ### Fortalezas generales
 
-El trabajo es ejemplar en todos los aspectos de la rúbrica. La introducción contextualiza el proyecto con precisión y cita la metodología EARS correctamente desde la fuente original (Mavin & Wilkinson, 2010). Las 20 referencias son pertinentes, correctamente citadas en IEEE y directamente relacionadas con los requisitos técnicos del sistema. La formulación del problema está delimitada geográficamente y sustentada con datos concretos. La justificación presenta hipótesis verificables respaldadas por literatura científica.
+Su trabajo es ejemplar en todos los aspectos de la rúbrica. Contextualizaron el proyecto con precisión en la introducción y citaron la metodología EARS correctamente desde la fuente original (Mavin & Wilkinson, 2010). Sus 20 referencias son pertinentes, correctamente citadas en IEEE y directamente relacionadas con los requisitos técnicos del sistema. Delimitaron geográficamente la formulación del problema y la sustentaron con datos concretos. Su justificación presenta hipótesis verificables respaldadas por literatura científica.
 
-Los requisitos cubren los cinco patrones EARS con sintaxis precisa, criterios de verificación cuantitativos, justificación técnica individualizada por requisito y una matriz de trazabilidad que conecta cada requisito con el problema identificado en el PIT1 y los NFR correspondientes.
+Sus requisitos cubren los cinco patrones EARS con sintaxis precisa, criterios de verificación cuantitativos, justificación técnica individualizada por requisito y una matriz de trazabilidad que conecta cada requisito con el problema identificado en el PIT1 y los NFR correspondientes.
 
 ### Consejos para seguir mejorando
 
@@ -36,7 +36,7 @@ Los requisitos cubren los cinco patrones EARS con sintaxis precisa, criterios de
 
 **Nota:** 3.0 / 5.0
 
-> **Nota de evaluación:** La entrega de este equipo consistió únicamente en el documento de requisitos EARS. El contexto (introducción, problema, justificación, referencias) se evaluó a partir del PIT1 previamente entregado, el cual describe con claridad el sistema de reservas de la Universidad ICESI, el cuello de botella operativo del área de Multimedios y presenta un análisis causa-raíz estructurado con análisis PESTLE. La calificación de contexto refleja esa entrega previa.
+> **Nota de evaluación:** Su entrega consistió únicamente en el documento de requisitos EARS. El contexto (introducción, problema, justificación, referencias) se evaluó a partir del PIT1 que entregaron previamente, el cual describe con claridad el sistema de reservas de la Universidad ICESI, el cuello de botella operativo del área de Multimedios y presenta un análisis causa-raíz estructurado con análisis PESTLE. La calificación de contexto refleja esa entrega previa.
 
 ### Análisis por criterio de la rúbrica de requisitos
 
@@ -89,7 +89,7 @@ Los requisitos cubren los cinco patrones EARS con sintaxis precisa, criterios de
 
 ### Fortalezas generales
 
-El trabajo tiene una introducción muy bien fundamentada con referentes ecológicos internacionales y estudios locales colombianos. La formulación del problema es profunda e incluye análisis causal, árbol de problemas y delimitación geográfica precisa. La justificación de viabilidad es sólida y cita antecedentes concretos del contexto colombiano (Fundación Paraíso de la Mascota, Fundación Alma Perruna, modelo HelloStreetCat). Las referencias están en formato IEEE y son pertinentes. La idea del proyecto es innovadora y bien argumentada.
+Su trabajo tiene una introducción muy bien fundamentada con referentes ecológicos internacionales y estudios locales colombianos. Su formulación del problema es profunda e incluye análisis causal, árbol de problemas y delimitación geográfica precisa. Su justificación de viabilidad es sólida y cita antecedentes concretos del contexto colombiano (Fundación Paraíso de la Mascota, Fundación Alma Perruna, modelo HelloStreetCat). Sus referencias están en formato IEEE y son pertinentes. Su idea del proyecto es innovadora y bien argumentada.
 
 ### Aspectos a mejorar en los requisitos EARS
 
