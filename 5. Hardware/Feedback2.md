@@ -1,4 +1,4 @@
-# Retroalimentación — Análisis de Requerimientos EARS (15%)
+# Retroalimentación — Análisis de Requerimientos EARS 
 
 **TEL 261 — Proyecto Integrador I | Período 2026-1**
 
@@ -69,11 +69,15 @@ Los requisitos cubren los cinco patrones EARS con sintaxis precisa, criterios de
 
 8. **RNF-03 (cumplimiento de la Ley 1581) es un requisito de conformidad, no un NFR de calidad.** Inclúyanlo como requisito regulatorio en una sección separada o como UBI: *"El sistema DEBERÁ cumplir con la Ley 1581 de 2012 sobre protección de datos personales, garantizando consentimiento informado para el tratamiento de datos de usuarios."*
 
+9. **Los requisitos no trazan al contexto institucional específico que identificaron en el PIT1.** El documento de contexto (PIT1) describe con precisión el sistema de "planetas" de la Universidad ICESI, el cuello de botella operativo del área de Multimedios y situaciones concretas vividas como estudiantes. Sin embargo, los requisitos entregados son completamente genéricos — podrían aplicar a cualquier sistema de reservas del mundo. En la próxima versión, anclen cada requisito al contexto real: mencionen ICESI, el sistema de planetas, los roles específicos (estudiante, docente, área de Multimedios) y los escenarios exactos del problema (acceso manual, retrasos por habilitación). Un requisito bien contextualizado es más fácil de validar y mucho más difícil de malinterpretar. Ejemplo:
+   - **Genérico (actual):** *"Cuando un usuario autenticado seleccione una sala disponible..."*
+   - **Contextualizado (mejor):** *"CUANDO un usuario autenticado de la Universidad ICESI (estudiante, docente o personal institucional) seleccione una sala disponible en el sistema de reservas de espacios académicos..."*
+
 ---
 
 ## EQUIPO 3 — CatFeeder IoT (Comederos Inteligentes para Gatos Callejeros)
 
-**Estudiantes:** Laura Sofía Armero Ordóñez *(verificar integrantes completos del equipo)*
+**Estudiantes:** Laura Sofía Armero Ordóñez, Ommhes Samuel León Díaz, José David Rodríguez Pinilla, Nicol Valeria Suárez Serrato
 
 **Nota:** 4.0 / 5.0
 
@@ -116,9 +120,9 @@ El trabajo tiene una introducción muy bien fundamentada con referentes ecológi
 
 ---
 
-## Nota sobre estudiantes sin entrega identificada
+## Nota sobre el documento de requisitos del Equipo 3
 
-Los estudiantes **José David Rodríguez Pinilla**, **Nicol Valeria Suárez Serrato** y **Ommhes Samuel León Díaz** no aparecen como autores en ninguno de los documentos entregados. Si forman parte de alguno de los equipos anteriores, verifiquen que su nombre esté incluido en la portada del documento y que la entrega haya quedado registrada correctamente en la plataforma.
+**José David Rodríguez Pinilla**, **Nicol Valeria Suárez Serrato** y **Ommhes Samuel León Díaz** aparecen correctamente como integrantes del equipo en el documento de contexto PIT1 ("The Walking Cats"). Sin embargo, el documento de requisitos entregados (V 1.3) solo muestra el nombre de Laura Sofía Armero Ordóñez en la portada. Para la siguiente entrega, asegúrense de que **todos los integrantes del equipo aparezcan explícitamente en la portada del documento de requisitos**. Adicionalmente, verifiquen que la entrega individual de cada integrante esté registrada correctamente en la plataforma.
 
 ---
 
