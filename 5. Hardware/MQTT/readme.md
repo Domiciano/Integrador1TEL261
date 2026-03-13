@@ -44,8 +44,11 @@ WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
 
 void callback(char* topic, byte* payload, unsigned int length) {
-  String message = String((char*) payload).substring(0, length);
-  Serial.println("Mensaje recibido en " + String(topic) + ": " + message);
+  String message = "";
+  for (int i = 0; i < length; i++) {
+    message += (char)payload[i];
+  }
+  Serial.println("Recibido: " + message);
 }
 
 void keepAlive(){
@@ -140,3 +143,14 @@ Allí verá los parámetros de conexión
 Puede conectarse a esta página para ensayar el protocolo de telemetría
 
 <a href="https://mqttx.app/web-clien">mqttx.app/web-client<a>
+
+# Ejercicios
+Al recibir un mensaje en el callback, el ESP32 debe responder en un topic de respuesta (ej: `icesi/integrador/response`) con el valor solicitado.
+
+| Comando | Descripción | Método |
+| --- | --- | --- |
+| `uptime` | Milisegundos que lleva encendido el ESP32 | `millis()` |
+| `ip` | Dirección IP asignada en la red WiFi | `WiFi.localIP().toString()` |
+| `rssi` | Intensidad de la señal WiFi en dBm | `WiFi.RSSI()` |
+| `mac` | Dirección MAC del ESP32 | `WiFi.macAddress()` |
+
