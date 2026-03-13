@@ -10,6 +10,7 @@ packet-beta
   64-79: "Packet ID (QoS 1/2)"
   80-127: "Payload (variable, max ~240B)"
 ```
+El paquete MQTT se divide en tres secciones principales. El Fixed Header es el único campo obligatorio en todos los paquetes: sus primeros 4 bits identifican el tipo de control (CONNECT, PUBLISH, SUBSCRIBE, etc.) y los siguientes 4 bits son flags que varían según el tipo; le sigue el campo Remaining Length que indica cuántos bytes vienen después. El Variable Header contiene el nombre del topic y, cuando se usa QoS 1 o 2, un Packet Identifier para rastrear la entrega. Finalmente el Payload es el mensaje en sí, con tamaño variable hasta el límite del buffer, que en PubSubClient son ~240 bytes útiles descontando las cabeceras.
 
 # Conexión a MQTT Server SIN SSL
 
