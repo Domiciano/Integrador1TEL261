@@ -1,3 +1,6 @@
+# MQTT
+MQTT (Message Queuing Telemetry Transport) es un protocolo de mensajería ligero basado en el modelo publicador-suscriptor, diseñado originalmente para entornos con recursos limitados y conexiones poco confiables, como redes industriales o dispositivos IoT. En lugar de comunicación directa entre dispositivos, todos los mensajes pasan por un intermediario llamado broker, que se encarga de recibir los mensajes de los publicadores y distribuirlos a los suscriptores que hayan registrado interés en un topic específico. Su bajo overhead, la simplicidad de su protocolo y el soporte para distintos niveles de calidad de servicio (QoS 0, 1 y 2) lo han convertido en el estándar de facto para la comunicación en ecosistemas IoT.
+
 # Anatomía del mensaje MQTT
 
 ```mermaid
