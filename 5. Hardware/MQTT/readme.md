@@ -1,3 +1,21 @@
+# Anatomía del mensaje MQTT
+
+```mermaid
+graph TD
+    A[MQTT Packet] --> B[Fixed Header]
+    A --> C[Variable Header]
+    A --> D[Payload]
+
+    B --> B1[Control Packet Type - 4 bits]
+    B --> B2[Flags - 4 bits]
+    B --> B3[Remaining Length - 1 a 4 bytes]
+
+    C --> C1[Topic Name]
+    C --> C2[Packet Identifier - solo QoS 1 y 2]
+
+    D --> D1[Mensaje - max MQTT_MAX_PACKET_SIZE - cabeceras]
+```
+
 # Conexión a MQTT Server SIN SSL
 
 Para usar este código necesitará PubSubClient de Nick O'Leary
