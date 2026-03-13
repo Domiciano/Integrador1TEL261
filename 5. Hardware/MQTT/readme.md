@@ -1,19 +1,14 @@
 # Anatomía del mensaje MQTT
 
 ```mermaid
-graph TD
-    A[MQTT Packet] --> B[Fixed Header]
-    A --> C[Variable Header]
-    A --> D[Payload]
-
-    B --> B1[Control Packet Type - 4 bits]
-    B --> B2[Flags - 4 bits]
-    B --> B3[Remaining Length - 1 a 4 bytes]
-
-    C --> C1[Topic Name]
-    C --> C2[Packet Identifier - solo QoS 1 y 2]
-
-    D --> D1[Mensaje - max MQTT_MAX_PACKET_SIZE - cabeceras]
+packet-beta
+  0-3: "Control Type (4b)"
+  4-7: "Flags (4b)"
+  8-15: "Remaining Length (1-4B)"
+  16-31: "Topic Length"
+  32-63: "Topic Name (variable)"
+  64-79: "Packet ID (QoS 1/2)"
+  80-127: "Payload (variable, max ~240B)"
 ```
 
 # Conexión a MQTT Server SIN SSL
