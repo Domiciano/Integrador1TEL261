@@ -5,6 +5,8 @@
 
 const char* ssid = "PUBLICA";
 const char* password = "";
+//const char* ssid = "LABREDES";
+//const char* password = "F0rmul4-1";
 
 //Capa de aplicación
 String url = "https://facelogprueba.firebaseio.com/data.json";
