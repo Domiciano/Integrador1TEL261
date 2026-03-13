@@ -1,137 +1,74 @@
-# Toma de datos
+```cpp
+#include <Arduino.h>
+#include <WiFi.h>
+#include <HTTPClient.h>
 
-El siguiente programa está en desarrollo y permite por ahora conectarse a WiFi, hacer un GET Request y muestrear un conjunto de datos para producir un JSON
+const char* ssid = "PUBLICA";
+const char* password = "";
 
-```c++
-  #include <WiFi.h>
-  #include <HTTPClient.h>
-  #include <Arduino_JSON.h>
+//Capa de aplicación
+String url = "https://facelogprueba.firebaseio.com/data.json";
 
-
-  String url = "https://facelogprueba.firebaseio.com/integrador.json";
-
-
-  const char* ssid = "LABREDES";
-  const char* password = "F0rmul4-1";
-
-  const int arrayLength = 20;
-  int measurements[arrayLength];
-
-
-  void setup() {
-    Serial.begin(115200);
-    WiFi.mode(WIFI_STA);
-    //initWiFi();
+void POSTRequest(){
+  HTTPClient http;
+  http.begin(url.c_str()); //TCP handshake
+  int httpResponseCode = http.POST("{\"message\":\"Hello World from Domi\"}"); // Http request
+  Serial.println(httpResponseCode);
+  if(httpResponseCode == 200){
+    String responseBody = http.getString();
+    Serial.println(responseBody);
+  }else{
+      Serial.println("Error on HTTP request");
   }
+}
 
-  void loop() {
-    int measurement = random(4096);
-    //Serial.println(measurement);
-    delay(500);
-  }
-
-  void serialEvent() {
-    if (Serial.available() > 0) {
-      String data = Serial.readStringUntil('\n');
-      if(data == "wifi"){
-        initWiFi();
-      }else if(data == "get"){
-        GETRequest();
-      }else if(data == "measure"){
-        readSensors();
-      }else{
-        Serial.println(data);
-      }
-    }
-  }
-
-  void initWiFi() {
-    WiFi.begin(ssid, password);
-    Serial.print("Connecting to WiFi ..");
-    while (WiFi.status() != WL_CONNECTED) {
-      Serial.print('.');
-      delay(1000);
-    }
-    Serial.println("Connected!!");
-    Serial.println(WiFi.localIP());
-    
-  }
-
-  void GETRequest() {
+void GETRequest(){
     HTTPClient http;
-    http.begin(url.c_str());
-    int httpResponseCode = http.GET();
-    Serial.println("Code: " + String(httpResponseCode) );
-    String payload = http.getString();
-    Serial.println(payload);
-    http.end();
-  }
-
-  void readSensors(){
-    for(int i=0 ; i<arrayLength ; i++){
-      int measurement = random(4096); // analogRead(34);
-      measurements[i] = measurement;
-      delay(20); //50Hz
+    http.begin(url.c_str()); //TCP handshake
+    int httpResponseCode = http.GET(); // Http request
+    Serial.println(httpResponseCode);
+    if(httpResponseCode == 200){
+      String responseBody = http.getString();
+      Serial.println(responseBody);
+    }else{
+      Serial.println("Error on HTTP request");
     }
+}
 
-    JSONVar testObj;
-    testObj["type"] = "Espiral";
-    testObj["samples"] = arrayLength;
+void connectToWiFi(){
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password); //Intento para conectarse al WiFi
+  Serial.print("Connecting to WiFi ..");
 
-    JSONVar jsonArray;
-    for(int i=0 ; i<arrayLength ; i++){
-      JSONVar reading;
-      reading["t"] = i*20;
-      reading["x"] = measurements[i];
-      jsonArray[i] = reading;
+  //While
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print('.');
+    delay(1000);
+  }
+
+  Serial.println("Connected!!");
+  Serial.println(WiFi.localIP());
+}
+
+void setup() {
+  Serial.begin(115200);
+}
+
+void loop() {
+  
+}
+
+void serialEvent() {
+  if (Serial.available() > 0) {
+    String data = Serial.readStringUntil('\n');
+    Serial.println(data);
+    if(data == "wifi"){
+      connectToWiFi();
+    }else if(data == "get"){
+      GETRequest();
+    }else if(data == "post"){
+      POSTRequest();
     }
-    testObj["readings"] = jsonArray;
-    String json = JSON.stringify(testObj);
-    POSTRequest(json);
   }
-
-  void POSTRequest(String json){
-      HTTPClient http;
-      String url = "http://192.168.130.38:8080/sensor";
-      http.begin(url);
-      http.addHeader("Content-Type", "application/json");
-      int httpResponseCode = http.POST(json);
-
-       //RECEPCIÓN
-      if (httpResponseCode > 0) {
-        Serial.print("HTTP Response code: ");
-        Serial.println(httpResponseCode);
-        String payload = http.getString();
-        Serial.println(payload);
-      } else {
-        Serial.print("Error code: ");
-        Serial.println(httpResponseCode);
-      }
-      http.end();
-
-  }
-```
-
-Adicionalmente se desarrolló un endpoint capaz de recibir la información producida
-```java
-@PostMapping("sensor")
-public ResponseEntity<?> sendData(@RequestBody Test test){
-  var output = ResponseEntity.status(200).body(test);
-  return output;
 }
 ```
-```java
-public class Test {
-    private String type;
-    private int samples;
-    private ArrayList<Reading> readings;
-    //GETS y SETS
-}
-```
-```java
-public class Reading {
-    private int t;
-    private int x;
-    //GETS y SETS
-```
-}
