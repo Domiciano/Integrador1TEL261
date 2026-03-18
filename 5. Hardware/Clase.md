@@ -4,20 +4,18 @@
 #include <HTTPClient.h>
 #include <Arduino_JSON.h>
 
-//const char* ssid = "PUBLICA";
-//const char* password = "";
-const char* ssid = "LABREDES";
-const char* password = "F0rmul4-1";
+const char* ssid = "PUBLICA";
+const char* password = "";
+//const char* ssid = "LABREDES";
+//const char* password = "F0rmul4-1";
 
 //Capa de aplicación
-String url = "http://192.168.130.37:8000/";
-
+String BASE_URL = "http://54.227.168.241:8000/";
 
 //Tomar un grupo usando Nyquist
 void takeTest(){
 
 }
-
 
 void POSTRequest(String url , String data){
   HTTPClient http;
@@ -48,7 +46,7 @@ String takeSingleSample(){
 void sendSingleSample(){
   String json = takeSingleSample();
   Serial.println(json);
-  String url = "http://192.168.130.37:8000/readings";
+  String url = "http://54.227.168.241:8000/readings";
   POSTRequest(url, json);
 }
 
