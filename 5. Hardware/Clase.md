@@ -1,16 +1,15 @@
-```cpp
 #include <Arduino.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <Arduino_JSON.h>
 
-const char* ssid = "PUBLICA";
-const char* password = "";
-//const char* ssid = "LABREDES";
-//const char* password = "F0rmul4-1";
+//const char* ssid = "PUBLICA";
+//const char* password = "";
+const char* ssid = "LABREDES";
+const char* password = "F0rmul4-1";
 
 //Capa de aplicación
-String BASE_URL = "http://54.227.168.241:8000/";
+String BASE_URL = "http://192.168.130.44:8000/";
 
 //Tomar un grupo usando Nyquist
 void takeTest(){
@@ -20,6 +19,7 @@ void takeTest(){
 void POSTRequest(String url , String data){
   HTTPClient http;
   http.begin(url.c_str()); //TCP handshake
+  http.addHeader("Content-Type","application/json");
   int httpResponseCode = http.POST(data); // Http request
   Serial.println(httpResponseCode);
   if(httpResponseCode == 200){
@@ -28,6 +28,29 @@ void POSTRequest(String url , String data){
   }else{
       Serial.println("Error on HTTP request");
   }
+}
+
+String takeFullSample(){
+  // 2 segundos
+  // El fenómeno tiene hasta 25Hz
+  // Muestreo a 50Hz, es decir, 50 muestras cada segundo
+  JSONVar readings; // []
+  for(int i=0 ; i<100 ; i++){
+    long tic = millis();
+    JSONVar reading; // {}
+    int value = random(0, 1024);
+    int timestamp = millis();
+    String deviceName = "HX711";
+    String units = "ADC";
+    reading["value"] = value; // {"value":234}
+    reading["timestamp"] = timestamp; // {"timestamp":1001,"value":234}
+    reading["deviceName"] = deviceName; // {"deviceName","HX711","timestamp":1001,"value":234}
+    reading["units"] = units; // {"units":"ADC", "deviceName","HX711","timestamp":1001,"value":234}
+    readings[i] = reading; // [ {...} ]
+    long toc = millis() - tic;
+    delay(20 - toc); //1000 / 50 -> 20
+  }
+  return JSON.stringify(readings);
 }
 
 String takeSingleSample(){
@@ -46,16 +69,21 @@ String takeSingleSample(){
 void sendSingleSample(){
   String json = takeSingleSample();
   Serial.println(json);
-  String url = "http://54.227.168.241:8000/readings";
+  String url = BASE_URL + "readings"; //  /readings
+  POSTRequest(url, json);
+}
+
+void sendFullSample(){
+  String json = takeFullSample();
+  Serial.println(json);
+  String url = BASE_URL + "readings/batch"; //  /readings
   POSTRequest(url, json);
 }
 
 
-
-
 void GETRequest(){
     HTTPClient http;
-    http.begin(url.c_str()); //TCP handshake
+    http.begin(BASE_URL.c_str()); //TCP handshake
     int httpResponseCode = http.GET(); // Http request
     Serial.println(httpResponseCode);
     if(httpResponseCode == 200){
@@ -98,8 +126,7 @@ void serialEvent() {
     }else if(data == "get"){
       GETRequest();
     }else if(data == "post"){
-      sendSingleSample();
+      sendFullSample();
     }
   }
 }
-```
