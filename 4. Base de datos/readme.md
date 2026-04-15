@@ -8,7 +8,7 @@
 3. [Lista de tablas](#3-lista-de-tablas)
 4. [Creación de tablas](#4-creación-de-tablas)
 5. [Insert Into](#5-insert-into)
-6. [Select * FROM tabla](#6-select--from-tabla)
+6. [Pedir datos](#6-pedir-datos)
 7. [Salir](#7-salir)
 
 
