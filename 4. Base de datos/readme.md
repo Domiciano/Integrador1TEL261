@@ -1,6 +1,17 @@
 # Guía básica PostgreSQL con Docker
 
 
+## Índice
+
+1. [Instalación de base de datos](#1-instalación-de-base-de-datos)
+2. [Entrar al contenedor](#2-entrar-al-contenedor)
+3. [Lista de tablas](#3-lista-de-tablas)
+4. [Creación de tablas](#4-creación-de-tablas)
+5. [Insert Into](#5-insert-into)
+6. [Select * FROM tabla](#6-select--from-tabla)
+7. [Salir](#7-salir)
+
+
 # 1. Instalación de base de datos
 
 ## Instalación de Postgres con Docker
@@ -136,7 +147,7 @@ VALUES
 ```
 
 
-# 6. Select \* FROM tabla
+# 6. Pedir datos
 
 Finalmente, consultamos los registros almacenados para verificar que los
 datos fueron guardados correctamente.
