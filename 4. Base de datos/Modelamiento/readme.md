@@ -234,5 +234,3 @@ erDiagram
 ```
 
 ---
-
-*Guía elaborada para el curso de Bases de Datos - Ingeniería Telemática.*
