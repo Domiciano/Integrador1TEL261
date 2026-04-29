@@ -1,76 +1,432 @@
-# HTTP
+# Introducción a React con Vite
 
-Para hacer llamados de tipo GET
+## Taller de 2 horas — Guía de clase
 
-```js
-const response = await fetch(url);
-const json = await response.json();
+---
+
+## Módulo 1 — ¿Por qué React?
+
+### El problema del DOM manual
+
+Con HTML y JavaScript puro, cada vez que el usuario interactúa con la página hay que actualizar el DOM manualmente:
+
+```javascript
+// JavaScript puro
+const lista = document.getElementById("lista");
+const nuevoItem = document.createElement("li");
+nuevoItem.textContent = "Sensor A";
+lista.appendChild(nuevoItem);
 ```
 
-Para hacer un POST, PUT o DELETE, sigue esto mismo
+Esto funciona para páginas simples, pero cuando la interfaz crece —múltiples componentes, datos que cambian, eventos encadenados— el código se vuelve difícil de mantener.
 
-```js
-const response = await fetch(url, {
-  method: 'POST', 
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(data)
-});
-const json = await response.json();
-```
-Donde data es un objeto
+### Qué es React
 
+React es una librería de JavaScript creada por Meta que resuelve este problema. En lugar de manipular el DOM directamente, describes cómo debería verse la interfaz en función de los datos, y React se encarga de actualizar lo que sea necesario.
 
-# MQTT
-Puede usar este código base como cliente MQTT. Lo primero es hacer la respectiva importación
+> En React no dices "agrega este elemento". Dices "cuando los datos sean así, muestra esto".
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="css/index.css" rel="stylesheet">
-    <title>Integrador TEL</title>
-</head>
-<body>
-    <h1>Integrador 1 telemática ICESI</h1>
-    <input type="text" placeholder="Mensaje">
-    <button id="okbtn">OK</button>
-</body>
-</html>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
-<script src="index.js"></script>
+### Qué es Vite
+
+Vite es la herramienta que usamos para crear y ejecutar proyectos de React. Es más rápida y simple que las alternativas anteriores. Se encarga de:
+
+- Crear la estructura inicial del proyecto
+- Ejecutar un servidor local de desarrollo
+- Compilar el proyecto para producción
+
+---
+
+## Módulo 2 — Configuración con Vite
+
+### Crear el proyecto
+
+```bash
+npm create vite@latest mi-proyecto -- --template react
+cd mi-proyecto
+npm install
+npm run dev
 ```
 
-Se adicionan un `input` y un `button` para que el usuario pueda escribir el mensaje a enviar al broker.
+### Estructura del proyecto
 
-Ahora, se puede construir un algoritmo basado en eventos que muestre en consola los mensajes recibidos y además permita enviar mensajes
+```
+mi-proyecto/
+├── public/          # Archivos estáticos
+├── src/
+│   ├── App.jsx      # Componente raíz
+│   ├── main.jsx     # Punto de entrada
+│   └── index.css    # Estilos globales
+├── index.html
+└── package.json
+```
 
+Los archivos que más vamos a editar son los que están dentro de `src/`. En particular, `App.jsx` es donde empieza todo.
 
-```js
-const client = new Paho.MQTT.Client('broker.hivemq.com', Number(8000), "webmqttuser1");
+### Primer vistazo a `main.jsx`
 
-//Listener de mensajes
-client.onMessageArrived = (msg) => {
-    console.log("Arrived!: "+msg.payloadString);
+```jsx
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import App from './App.jsx'
+
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+)
+```
+
+Este archivo conecta React con el HTML. Le dice a React que tome el elemento con `id="root"` del `index.html` y lo controle desde ahí.
+
+---
+
+## Módulo 3 — Componentes y JSX
+
+### Qué es un componente
+
+Un componente es una función de JavaScript que retorna lo que se va a mostrar en pantalla. Es la unidad básica de React: todo en una aplicación React es un componente.
+
+```jsx
+function Saludo() {
+  return <h1>Hola desde React</h1>
+}
+```
+
+### JSX
+
+JSX es la sintaxis que parece HTML pero está dentro de JavaScript. React la convierte al código que el navegador entiende.
+
+```jsx
+// Esto es JSX
+function Tarjeta() {
+  return (
+    <div>
+      <h2>Sensor A</h2>
+      <p>Temperatura</p>
+    </div>
+  )
+}
+```
+
+#### Reglas importantes de JSX
+
+| Regla | Ejemplo correcto |
+|---|---|
+| Solo un elemento raíz | `<div>...</div>` o `<>...</>` |
+| Las clases se escriben como `className` | `<div className="tarjeta">` |
+| Las etiquetas siempre se cierran | `<input />` |
+| Las expresiones van entre llaves | `<p>{nombre}</p>` |
+
+### Usar un componente dentro de otro
+
+```jsx
+function App() {
+  return (
+    <div>
+      <Tarjeta />
+      <Tarjeta />
+    </div>
+  )
+}
+```
+
+Cada vez que escribes `<Tarjeta />`, React ejecuta esa función y muestra su resultado.
+
+---
+
+## Módulo 4 — Props y listas
+
+### Qué son las props
+
+Las props son los datos que un componente padre le pasa a un componente hijo. Funcionan como los atributos en HTML, pero pueden ser cualquier valor de JavaScript.
+
+```jsx
+// Componente hijo: recibe props
+function Tarjeta(props) {
+  return (
+    <div>
+      <h2>{props.nombre}</h2>
+      <p>{props.tipo}</p>
+    </div>
+  )
 }
 
-//Función para conectarse al broker
-client.connect({onSuccess:() => {
-    console.log("conectado!")
-    client.subscribe("test/101/beta");
-}});
-
-//Función para enviar un mensaje a un topic
-const sendMessage = () => {
-    message = new Paho.MQTT.Message("Hello from JS");
-    message.destinationName = "test/101/beta";
-    client.send(message);
-};
+// Componente padre: pasa props
+function App() {
+  return (
+    <div>
+      <Tarjeta nombre="Sensor A" tipo="Temperatura" />
+      <Tarjeta nombre="Sensor B" tipo="Humedad" />
+    </div>
+  )
+}
 ```
 
+También se pueden desestructurar directamente:
 
+```jsx
+function Tarjeta({ nombre, tipo }) {
+  return (
+    <div>
+      <h2>{nombre}</h2>
+      <p>{tipo}</p>
+    </div>
+  )
+}
+```
 
+### Renderizar listas con `.map()`
+
+Cuando tenemos un arreglo de datos, usamos `.map()` para convertir cada elemento en un componente. React requiere que cada elemento tenga un `key` único.
+
+```jsx
+const dispositivos = [
+  { id: 1, nombre: "Sensor A", tipo: "Temperatura" },
+  { id: 2, nombre: "Sensor B", tipo: "Humedad" },
+  { id: 3, nombre: "Sensor C", tipo: "Presión" },
+]
+
+function App() {
+  return (
+    <div>
+      {dispositivos.map((dispositivo) => (
+        <Tarjeta
+          key={dispositivo.id}
+          nombre={dispositivo.nombre}
+          tipo={dispositivo.tipo}
+        />
+      ))}
+    </div>
+  )
+}
+```
+
+> La prop `key` no se muestra en pantalla. React la usa internamente para saber qué elementos actualizar cuando los datos cambian.
+
+---
+
+## Módulo 5 — Estado con `useState`
+
+### Por qué no funcionan las variables normales
+
+```jsx
+// Esto NO funciona
+function Contador() {
+  let contador = 0
+
+  function incrementar() {
+    contador = contador + 1
+    // React no sabe que el valor cambió, no actualiza la pantalla
+  }
+
+  return <button onClick={incrementar}>{contador}</button>
+}
+```
+
+El problema es que React solo actualiza la pantalla cuando detecta un cambio en el **estado**. Una variable normal no dispara esa detección.
+
+### `useState`
+
+`useState` es la herramienta de React para manejar valores que cambian en el tiempo.
+
+```jsx
+import { useState } from 'react'
+
+function Contador() {
+  const [contador, setContador] = useState(0)
+
+  function incrementar() {
+    setContador(contador + 1)  // React detecta el cambio y re-renderiza
+  }
+
+  return <button onClick={incrementar}>{contador}</button>
+}
+```
+
+#### Anatomía de `useState`
+
+```jsx
+const [valor, setValor] = useState(valorInicial)
+//     |       |                   |
+//     |       |                   Valor con el que empieza
+//     |       Función para cambiar el valor
+//     El valor actual
+```
+
+### Manejar un input con estado
+
+```jsx
+function Formulario() {
+  const [nombre, setNombre] = useState("")
+
+  return (
+    <input
+      value={nombre}
+      onChange={(e) => setNombre(e.target.value)}
+      placeholder="Nombre del dispositivo"
+    />
+  )
+}
+```
+
+El estado `nombre` siempre refleja lo que el usuario escribe, y el input siempre muestra el estado actual. Este patrón se llama **componente controlado**.
+
+---
+
+## Módulo 6 — Mini-proyecto: Tarjetas de dispositivos
+
+Vamos a construir una aplicación donde el usuario puede registrar dispositivos y verlos como tarjetas.
+
+### Funcionalidades
+
+- Ingresar el nombre y tipo de un dispositivo
+- Agregar el dispositivo a la lista
+- Eliminar un dispositivo de la lista
+
+### Código completo
+
+```jsx
+import { useState } from 'react'
+
+// Componente para mostrar un dispositivo
+function Tarjeta({ nombre, tipo, onEliminar }) {
+  return (
+    <div style={{
+      border: "1px solid #ccc",
+      borderRadius: "8px",
+      padding: "16px",
+      marginBottom: "8px"
+    }}>
+      <h3>{nombre}</h3>
+      <p>{tipo}</p>
+      <button onClick={onEliminar}>Eliminar</button>
+    </div>
+  )
+}
+
+// Componente principal
+function App() {
+  const [dispositivos, setDispositivos] = useState([])
+  const [nombre, setNombre] = useState("")
+  const [tipo, setTipo] = useState("")
+
+  function agregarDispositivo() {
+    if (nombre === "" || tipo === "") return
+
+    const nuevo = {
+      id: Date.now(),  // ID único basado en la hora actual
+      nombre: nombre,
+      tipo: tipo,
+    }
+
+    setDispositivos([...dispositivos, nuevo])
+    setNombre("")   // Limpiar el input
+    setTipo("")     // Limpiar el input
+  }
+
+  function eliminarDispositivo(id) {
+    const actualizados = dispositivos.filter((d) => d.id !== id)
+    setDispositivos(actualizados)
+  }
+
+  return (
+    <div style={{ maxWidth: "500px", margin: "40px auto", fontFamily: "sans-serif" }}>
+      <h1>Registro de dispositivos</h1>
+
+      {/* Formulario */}
+      <div style={{ marginBottom: "24px" }}>
+        <input
+          value={nombre}
+          onChange={(e) => setNombre(e.target.value)}
+          placeholder="Nombre del dispositivo"
+          style={{ display: "block", marginBottom: "8px", width: "100%", padding: "8px" }}
+        />
+        <input
+          value={tipo}
+          onChange={(e) => setTipo(e.target.value)}
+          placeholder="Tipo (temperatura, humedad...)"
+          style={{ display: "block", marginBottom: "8px", width: "100%", padding: "8px" }}
+        />
+        <button onClick={agregarDispositivo}>Agregar dispositivo</button>
+      </div>
+
+      {/* Lista de tarjetas */}
+      {dispositivos.map((dispositivo) => (
+        <Tarjeta
+          key={dispositivo.id}
+          nombre={dispositivo.nombre}
+          tipo={dispositivo.tipo}
+          onEliminar={() => eliminarDispositivo(dispositivo.id)}
+        />
+      ))}
+
+      {dispositivos.length === 0 && (
+        <p style={{ color: "#999" }}>No hay dispositivos registrados.</p>
+      )}
+    </div>
+  )
+}
+
+export default App
+```
+
+### Puntos clave del mini-proyecto
+
+| Concepto | Dónde aparece |
+|---|---|
+| `useState` con arreglo | `const [dispositivos, setDispositivos] = useState([])` |
+| Spread operator para agregar | `setDispositivos([...dispositivos, nuevo])` |
+| `.filter()` para eliminar | `dispositivos.filter((d) => d.id !== id)` |
+| Props con funciones | `onEliminar` pasada como prop a `<Tarjeta>` |
+| Renderizado condicional | `{dispositivos.length === 0 && <p>...</p>}` |
+
+---
+
+## Bonus — `useEffect`
+
+`useEffect` permite ejecutar código cuando algo cambia, o cuando el componente aparece por primera vez en pantalla. Es útil para cargar datos desde una API, entre otras cosas.
+
+```jsx
+import { useState, useEffect } from 'react'
+
+function App() {
+  const [dispositivos, setDispositivos] = useState([])
+
+  // Se ejecuta una vez cuando el componente se monta
+  useEffect(() => {
+    fetch("https://mi-api.com/dispositivos")
+      .then((res) => res.json())
+      .then((data) => setDispositivos(data))
+  }, [])  // El arreglo vacío significa "solo al montar"
+
+  return (
+    <div>
+      {dispositivos.map((d) => (
+        <Tarjeta key={d.id} nombre={d.nombre} tipo={d.tipo} />
+      ))}
+    </div>
+  )
+}
+```
+
+### Cuándo usar `useEffect`
+
+| Segundo argumento | Cuándo se ejecuta |
+|---|---|
+| `[]` | Solo al montar el componente |
+| `[valor]` | Al montar y cada vez que `valor` cambia |
+| Sin segundo argumento | En cada re-render (raramente útil) |
+
+---
+
+## Resumen de conceptos
+
+| Concepto | Para qué sirve |
+|---|---|
+| Componente | Función que retorna JSX; unidad básica de React |
+| JSX | Sintaxis parecida a HTML que se escribe dentro de JavaScript |
+| Props | Datos que el padre le pasa al hijo |
+| `useState` | Maneja valores que cambian y dispara re-renders |
+| `useEffect` | Ejecuta código en respuesta a montaje o cambios |
+| `.map()` | Convierte un arreglo de datos en arreglo de componentes |
+| `.filter()` | Crea un nuevo arreglo sin el elemento eliminado |
