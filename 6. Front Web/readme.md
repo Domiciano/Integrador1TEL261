@@ -1,10 +1,5 @@
 # Introducción a React con Vite
 
-## Taller de 2 horas — Guía de clase
-
----
-
-## Módulo 1 — ¿Por qué React?
 
 ### El problema del DOM manual
 
