@@ -20,10 +20,7 @@
   - [Por qué no funcionan las variables normales](#por-qué-no-funcionan-las-variables-normales)
   - [`useState`](#usestate)
   - [Manejar un input con estado](#manejar-un-input-con-estado)
-- [Módulo 6 — Mini-proyecto: Tarjetas de dispositivos](#módulo-6--mini-proyecto-tarjetas-de-dispositivos)
-  - [Funcionalidades](#funcionalidades)
-  - [Código completo](#código-completo)
-  - [Puntos clave del mini-proyecto](#puntos-clave-del-mini-proyecto)
+- [Módulo 6 — Mini-proyecto: Chat](#módulo-6--mini-proyecto-chat)
 - [Bonus — `useEffect`](#bonus--useeffect)
   - [Cuándo usar `useEffect`](#cuándo-usar-useeffect)
 - [Resumen de conceptos](#resumen-de-conceptos)
@@ -303,96 +300,34 @@ El estado `nombre` siempre refleja lo que el usuario escribe, y el input siempre
 
 ---
 
-## Módulo 6 — Mini-proyecto: Tarjetas de dispositivos
+## Módulo 6 — Mini-proyecto: Chat
 
-Vamos a construir una aplicación donde el usuario puede registrar dispositivos y verlos como tarjetas.
-
-### Funcionalidades
-
-- Ingresar el nombre y tipo de un dispositivo
-- Agregar el dispositivo a la lista
-- Eliminar un dispositivo de la lista
-
-### Código completo
+Un input y un botón. Cada mensaje enviado se acumula en pantalla como una ventana de chat.
 
 ```jsx
 import { useState } from 'react'
 
-// Componente para mostrar un dispositivo
-function Tarjeta({ nombre, tipo, onEliminar }) {
-  return (
-    <div style={{
-      border: "1px solid #ccc",
-      borderRadius: "8px",
-      padding: "16px",
-      marginBottom: "8px"
-    }}>
-      <h3>{nombre}</h3>
-      <p>{tipo}</p>
-      <button onClick={onEliminar}>Eliminar</button>
-    </div>
-  )
-}
-
-// Componente principal
 function App() {
-  const [dispositivos, setDispositivos] = useState([])
-  const [nombre, setNombre] = useState("")
-  const [tipo, setTipo] = useState("")
+  const [mensajes, setMensajes] = useState([])
+  const [texto, setTexto] = useState("")
 
-  function agregarDispositivo() {
-    if (nombre === "" || tipo === "") return
-
-    const nuevo = {
-      id: Date.now(),  // ID único basado en la hora actual
-      nombre: nombre,
-      tipo: tipo,
-    }
-
-    setDispositivos([...dispositivos, nuevo])
-    setNombre("")   // Limpiar el input
-    setTipo("")     // Limpiar el input
-  }
-
-  function eliminarDispositivo(id) {
-    const actualizados = dispositivos.filter((d) => d.id !== id)
-    setDispositivos(actualizados)
+  function enviar() {
+    if (texto === "") return
+    setMensajes([...mensajes, texto])
+    setTexto("")
   }
 
   return (
-    <div style={{ maxWidth: "500px", margin: "40px auto", fontFamily: "sans-serif" }}>
-      <h1>Registro de dispositivos</h1>
-
-      {/* Formulario */}
-      <div style={{ marginBottom: "24px" }}>
-        <input
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-          placeholder="Nombre del dispositivo"
-          style={{ display: "block", marginBottom: "8px", width: "100%", padding: "8px" }}
-        />
-        <input
-          value={tipo}
-          onChange={(e) => setTipo(e.target.value)}
-          placeholder="Tipo (temperatura, humedad...)"
-          style={{ display: "block", marginBottom: "8px", width: "100%", padding: "8px" }}
-        />
-        <button onClick={agregarDispositivo}>Agregar dispositivo</button>
-      </div>
-
-      {/* Lista de tarjetas */}
-      {dispositivos.map((dispositivo) => (
-        <Tarjeta
-          key={dispositivo.id}
-          nombre={dispositivo.nombre}
-          tipo={dispositivo.tipo}
-          onEliminar={() => eliminarDispositivo(dispositivo.id)}
-        />
+    <div>
+      {mensajes.map((msg, i) => (
+        <p key={i}>{msg}</p>
       ))}
-
-      {dispositivos.length === 0 && (
-        <p style={{ color: "#999" }}>No hay dispositivos registrados.</p>
-      )}
+      <input
+        value={texto}
+        onChange={(e) => setTexto(e.target.value)}
+        placeholder="Escribe un mensaje"
+      />
+      <button onClick={enviar}>Enviar</button>
     </div>
   )
 }
@@ -404,11 +339,10 @@ export default App
 
 | Concepto | Dónde aparece |
 |---|---|
-| `useState` con arreglo | `const [dispositivos, setDispositivos] = useState([])` |
-| Spread operator para agregar | `setDispositivos([...dispositivos, nuevo])` |
-| `.filter()` para eliminar | `dispositivos.filter((d) => d.id !== id)` |
-| Props con funciones | `onEliminar` pasada como prop a `<Tarjeta>` |
-| Renderizado condicional | `{dispositivos.length === 0 && <p>...</p>}` |
+| `useState` con arreglo | `const [mensajes, setMensajes] = useState([])` |
+| Spread operator para agregar | `setMensajes([...mensajes, texto])` |
+| Limpiar el input tras enviar | `setTexto("")` |
+| Renderizar la lista | `.map((msg, i) => <p key={i}>{msg}</p>)` |
 
 ---
 
@@ -505,20 +439,20 @@ const TOPIC  = 'test/101/beta'
 const client = mqtt.connect(BROKER)
 
 client.on('connect', () => {
-  console.log('Conectado al broker')
+  console.log('✅ Conectado al broker')
 
   // Suscribirse para recibir mensajes
   client.subscribe(TOPIC, () => {
-    console.log(`Suscrito a: ${TOPIC}`)
+    console.log(`📡 Suscrito a: ${TOPIC}`)
   })
 
   // Publicar un mensaje de prueba después de conectarse
   client.publish(TOPIC, 'Hola desde Node.js')
-  console.log('Mensaje enviado')
+  console.log('📤 Mensaje enviado')
 })
 
 client.on('message', (topic, message) => {
-  console.log(`Mensaje recibido en [${topic}]: ${message.toString()}`)
+  console.log(`📨 Mensaje recibido en [${topic}]: ${message.toString()}`)
 })
 ```
 
@@ -531,10 +465,10 @@ node mqtt.js
 Deberías ver en consola algo como:
 
 ```
-Conectado al broker
-Suscrito a: test/101/beta
-Mensaje enviado
-Mensaje recibido en [test/101/beta]: Hola desde Node.js
+✅ Conectado al broker
+📡 Suscrito a: test/101/beta
+📤 Mensaje enviado
+📨 Mensaje recibido en [test/101/beta]: Hola desde Node.js
 ```
 
 > El cliente recibe su propio mensaje porque también está suscrito al mismo topic. Esto es normal en MQTT.
