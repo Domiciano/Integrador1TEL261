@@ -27,6 +27,12 @@
 - [Bonus — `useEffect`](#bonus--useeffect)
   - [Cuándo usar `useEffect`](#cuándo-usar-useeffect)
 - [Resumen de conceptos](#resumen-de-conceptos)
+- [Módulo 7 — MQTT](#módulo-7--mqtt)
+  - [Qué es MQTT](#qué-es-mqtt)
+  - [Prueba rápida con Node.js](#prueba-rápida-con-nodejs)
+  - [Integración con React — Recibir mensajes](#integración-con-react--recibir-mensajes)
+  - [Integración con React — Enviar mensajes](#integración-con-react--enviar-mensajes)
+  - [Código completo: envío y recepción en React](#código-completo-envío-y-recepción-en-react)
 
 ---
 
@@ -454,3 +460,262 @@ function App() {
 | `useEffect` | Ejecuta código en respuesta a montaje o cambios |
 | `.map()` | Convierte un arreglo de datos en arreglo de componentes |
 | `.filter()` | Crea un nuevo arreglo sin el elemento eliminado |
+
+---
+
+## Módulo 7 — MQTT
+
+### Qué es MQTT
+
+MQTT es un protocolo de mensajería ligero pensado para dispositivos IoT. Funciona con un modelo **publicar / suscribir**:
+
+- Los dispositivos **publican** mensajes en un *topic* (ej: `sensores/temperatura`)
+- Otros dispositivos o aplicaciones **se suscriben** a ese topic y reciben los mensajes
+- Un servidor central llamado **broker** se encarga de distribuirlos
+
+```
+[Sensor] --publica--> [Broker] --entrega--> [App React]
+                                --entrega--> [Otro cliente]
+```
+
+En esta sección usaremos el broker público `broker.hivemq.com`, que no requiere cuenta ni configuración.
+
+---
+
+### Prueba rápida con Node.js
+
+Antes de tocar React, vamos a verificar que todo funciona desde la terminal con un script simple.
+
+**Instalar la librería:**
+
+```bash
+npm install mqtt
+```
+
+**Crear el archivo `mqtt.js`:**
+
+```js
+const mqtt = require('mqtt')
+
+const BROKER = 'mqtt://broker.hivemq.com'
+const TOPIC  = 'test/101/beta'
+
+const client = mqtt.connect(BROKER)
+
+client.on('connect', () => {
+  console.log('✅ Conectado al broker')
+
+  // Suscribirse para recibir mensajes
+  client.subscribe(TOPIC, () => {
+    console.log(`📡 Suscrito a: ${TOPIC}`)
+  })
+
+  // Publicar un mensaje de prueba después de conectarse
+  client.publish(TOPIC, 'Hola desde Node.js')
+  console.log('📤 Mensaje enviado')
+})
+
+client.on('message', (topic, message) => {
+  console.log(`📨 Mensaje recibido en [${topic}]: ${message.toString()}`)
+})
+```
+
+**Ejecutar:**
+
+```bash
+node mqtt.js
+```
+
+Deberías ver en consola algo como:
+
+```
+✅ Conectado al broker
+📡 Suscrito a: test/101/beta
+📤 Mensaje enviado
+📨 Mensaje recibido en [test/101/beta]: Hola desde Node.js
+```
+
+> El cliente recibe su propio mensaje porque también está suscrito al mismo topic. Esto es normal en MQTT.
+
+---
+
+### Integración con React — Recibir mensajes
+
+Para usar MQTT dentro de un proyecto React con Vite, se usa la misma librería `mqtt`:
+
+```bash
+npm install mqtt
+```
+
+El patrón es siempre el mismo: conectarse al broker dentro de un `useEffect`, y guardar los mensajes que llegan en un estado con `useState`.
+
+```jsx
+import { useState, useEffect } from 'react'
+import mqtt from 'mqtt'
+
+const BROKER = 'wss://broker.hivemq.com:8884/mqtt'
+const TOPIC  = 'test/101/beta'
+
+function App() {
+  const [mensajes, setMensajes] = useState([])
+
+  useEffect(() => {
+    const client = mqtt.connect(BROKER)
+
+    client.on('connect', () => {
+      client.subscribe(TOPIC)
+    })
+
+    client.on('message', (topic, payload) => {
+      const texto = payload.toString()
+      setMensajes((prev) => [...prev, texto])  // agrega al historial
+    })
+
+    // Al desmontar el componente, cerrar la conexión
+    return () => client.end()
+  }, [])
+
+  return (
+    <div>
+      <h2>Mensajes recibidos</h2>
+      {mensajes.map((msg, i) => (
+        <p key={i}>{msg}</p>
+      ))}
+    </div>
+  )
+}
+
+export default App
+```
+
+> **¿Por qué `wss://` y no `mqtt://`?**
+> Los navegadores no pueden abrir conexiones TCP directas. Usan WebSockets (`wss://`) en su lugar. La librería `mqtt` lo maneja automáticamente si la URL empieza con `wss://`.
+
+---
+
+### Integración con React — Enviar mensajes
+
+Para enviar, se necesita acceder al cliente MQTT fuera del `useEffect`. La forma más simple es guardar el cliente en un estado o en una referencia con `useRef`.
+
+```jsx
+import { useState, useEffect, useRef } from 'react'
+import mqtt from 'mqtt'
+
+const BROKER = 'wss://broker.hivemq.com:8884/mqtt'
+const TOPIC  = 'test/101/beta'
+
+function App() {
+  const [texto, setTexto] = useState('')
+  const clientRef = useRef(null)  // guarda el cliente sin provocar re-renders
+
+  useEffect(() => {
+    clientRef.current = mqtt.connect(BROKER)
+    return () => clientRef.current.end()
+  }, [])
+
+  const enviar = () => {
+    if (!texto) return
+    clientRef.current.publish(TOPIC, texto)
+    setTexto('')
+  }
+
+  return (
+    <div>
+      <input
+        value={texto}
+        onChange={(e) => setTexto(e.target.value)}
+        placeholder="Escribe un mensaje"
+      />
+      <button onClick={enviar}>Enviar</button>
+    </div>
+  )
+}
+
+export default App
+```
+
+> **`useRef`** permite guardar un valor que persiste entre renders sin que cambiarlo dispare un re-render. Es ideal para guardar referencias a conexiones, timers, o cualquier cosa "externa" a React.
+
+---
+
+### Código completo: envío y recepción en React
+
+Este componente combina todo lo anterior: se conecta, recibe mensajes, y permite enviar desde un input.
+
+```jsx
+import { useState, useEffect, useRef } from 'react'
+import mqtt from 'mqtt'
+
+const BROKER = 'wss://broker.hivemq.com:8884/mqtt'
+const TOPIC  = 'test/101/beta'
+
+function App() {
+  const [mensajes, setMensajes] = useState([])
+  const [texto, setTexto]       = useState('')
+  const [conectado, setConectado] = useState(false)
+  const clientRef = useRef(null)
+
+  useEffect(() => {
+    const client = mqtt.connect(BROKER)
+    clientRef.current = client
+
+    client.on('connect', () => {
+      setConectado(true)
+      client.subscribe(TOPIC)
+    })
+
+    client.on('message', (topic, payload) => {
+      const texto = payload.toString()
+      setMensajes((prev) => [...prev, texto])
+    })
+
+    return () => client.end()
+  }, [])
+
+  const enviar = () => {
+    if (!texto || !conectado) return
+    clientRef.current.publish(TOPIC, texto)
+    setTexto('')
+  }
+
+  return (
+    <div style={{ maxWidth: '500px', margin: '40px auto', fontFamily: 'sans-serif' }}>
+      <h1>Cliente MQTT</h1>
+      <p>{conectado ? '🟢 Conectado' : '🔴 Conectando...'}</p>
+
+      {/* Envío */}
+      <div style={{ marginBottom: '24px' }}>
+        <input
+          value={texto}
+          onChange={(e) => setTexto(e.target.value)}
+          placeholder="Escribe un mensaje"
+          style={{ width: '100%', padding: '8px', marginBottom: '8px' }}
+        />
+        <button onClick={enviar} disabled={!conectado}>Enviar</button>
+      </div>
+
+      {/* Historial */}
+      <h2>Mensajes recibidos</h2>
+      {mensajes.length === 0 && <p style={{ color: '#999' }}>Sin mensajes aún.</p>}
+      {mensajes.map((msg, i) => (
+        <p key={i} style={{ background: '#f0f0f0', padding: '8px', borderRadius: '4px' }}>
+          {msg}
+        </p>
+      ))}
+    </div>
+  )
+}
+
+export default App
+```
+
+### Resumen del módulo
+
+| Concepto | Qué hace |
+|---|---|
+| `mqtt.connect(url)` | Crea la conexión al broker |
+| `client.subscribe(topic)` | Se suscribe para recibir mensajes de ese topic |
+| `client.publish(topic, msg)` | Envía un mensaje a ese topic |
+| `client.on('message', fn)` | Listener que se ejecuta al llegar un mensaje |
+| `useRef` | Guarda el cliente MQTT sin provocar re-renders |
+| `wss://` | Protocolo necesario para MQTT desde el navegador |
