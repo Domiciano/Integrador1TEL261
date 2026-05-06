@@ -6,14 +6,27 @@
 - [Qué es React](#qué-es-react)
 - [Qué es Vite](#qué-es-vite)
 - [Módulo 2 — Configuración con Vite](#módulo-2--configuración-con-vite)
+  - [Crear el proyecto](#crear-el-proyecto)
+  - [Estructura del proyecto](#estructura-del-proyecto)
+  - [Primer vistazo a `main.jsx`](#primer-vistazo-a-mainjsx)
 - [Módulo 3 — Componentes y JSX](#módulo-3--componentes-y-jsx)
-  
+  - [Qué es un componente](#qué-es-un-componente)
+  - [JSX](#jsx)
+  - [Usar un componente dentro de otro](#usar-un-componente-dentro-de-otro)
 - [Módulo 4 — Props y listas](#módulo-4--props-y-listas)
-  
+  - [Qué son las props](#qué-son-las-props)
+  - [Renderizar listas con `.map()`](#renderizar-listas-con-map)
 - [Módulo 5 — Estado con `useState`](#módulo-5--estado-con-usestate)
-  
+  - [Por qué no funcionan las variables normales](#por-qué-no-funcionan-las-variables-normales)
+  - [`useState`](#usestate)
+  - [Manejar un input con estado](#manejar-un-input-con-estado)
 - [Módulo 6 — Mini-proyecto: Tarjetas de dispositivos](#módulo-6--mini-proyecto-tarjetas-de-dispositivos)
+  - [Funcionalidades](#funcionalidades)
+  - [Código completo](#código-completo)
+  - [Puntos clave del mini-proyecto](#puntos-clave-del-mini-proyecto)
 - [Bonus — `useEffect`](#bonus--useeffect)
+  - [Cuándo usar `useEffect`](#cuándo-usar-useeffect)
+- [Resumen de conceptos](#resumen-de-conceptos)
 - [Módulo 7 — MQTT](#módulo-7--mqtt)
   - [Qué es MQTT](#qué-es-mqtt)
   - [Prueba rápida con Node.js](#prueba-rápida-con-nodejs)
@@ -481,8 +494,10 @@ npm install mqtt
 
 **Crear el archivo `mqtt.js`:**
 
+> Asegúrate de tener `"type": "module"` en tu `package.json`, o guarda el archivo como `mqtt.mjs`.
+
 ```js
-const mqtt = require('mqtt')
+import mqtt from 'mqtt'
 
 const BROKER = 'mqtt://broker.hivemq.com'
 const TOPIC  = 'test/101/beta'
