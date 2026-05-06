@@ -505,20 +505,20 @@ const TOPIC  = 'test/101/beta'
 const client = mqtt.connect(BROKER)
 
 client.on('connect', () => {
-  console.log('✅ Conectado al broker')
+  console.log('Conectado al broker')
 
   // Suscribirse para recibir mensajes
   client.subscribe(TOPIC, () => {
-    console.log(`📡 Suscrito a: ${TOPIC}`)
+    console.log(`Suscrito a: ${TOPIC}`)
   })
 
   // Publicar un mensaje de prueba después de conectarse
   client.publish(TOPIC, 'Hola desde Node.js')
-  console.log('📤 Mensaje enviado')
+  console.log('Mensaje enviado')
 })
 
 client.on('message', (topic, message) => {
-  console.log(`📨 Mensaje recibido en [${topic}]: ${message.toString()}`)
+  console.log(`Mensaje recibido en [${topic}]: ${message.toString()}`)
 })
 ```
 
@@ -531,10 +531,10 @@ node mqtt.js
 Deberías ver en consola algo como:
 
 ```
-✅ Conectado al broker
-📡 Suscrito a: test/101/beta
-📤 Mensaje enviado
-📨 Mensaje recibido en [test/101/beta]: Hola desde Node.js
+Conectado al broker
+Suscrito a: test/101/beta
+Mensaje enviado
+Mensaje recibido en [test/101/beta]: Hola desde Node.js
 ```
 
 > El cliente recibe su propio mensaje porque también está suscrito al mismo topic. Esto es normal en MQTT.
