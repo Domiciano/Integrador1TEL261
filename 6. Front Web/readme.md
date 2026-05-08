@@ -1,476 +1,3 @@
-# Introducción a React con Vite
-
-## Índice
-
-- [El problema del DOM manual](#el-problema-del-dom-manual)
-- [Qué es React](#qué-es-react)
-- [Qué es Vite](#qué-es-vite)
-- [Módulo 2 — Configuración con Vite](#módulo-2--configuración-con-vite)
-  - [Crear el proyecto](#crear-el-proyecto)
-  - [Estructura del proyecto](#estructura-del-proyecto)
-  - [Primer vistazo a `main.jsx`](#primer-vistazo-a-mainjsx)
-- [Módulo 3 — Componentes y JSX](#módulo-3--componentes-y-jsx)
-  - [Qué es un componente](#qué-es-un-componente)
-  - [JSX](#jsx)
-  - [Usar un componente dentro de otro](#usar-un-componente-dentro-de-otro)
-- [Módulo 4 — Props y listas](#módulo-4--props-y-listas)
-  - [Qué son las props](#qué-son-las-props)
-  - [Renderizar listas con `.map()`](#renderizar-listas-con-map)
-- [Módulo 5 — Estado con `useState`](#módulo-5--estado-con-usestate)
-  - [Por qué no funcionan las variables normales](#por-qué-no-funcionan-las-variables-normales)
-  - [`useState`](#usestate)
-  - [Manejar un input con estado](#manejar-un-input-con-estado)
-- [Módulo 6 — Mini-proyecto: Chat](#módulo-6--mini-proyecto-chat)
-- [Bonus — `useEffect`](#bonus--useeffect)
-  - [Cuándo usar `useEffect`](#cuándo-usar-useeffect)
-- [Resumen de conceptos](#resumen-de-conceptos)
-- [Módulo 7 — MQTT](#módulo-7--mqtt)
-  - [Qué es MQTT](#qué-es-mqtt)
-  - [Prueba rápida con Node.js](#prueba-rápida-con-nodejs)
-  - [Integración con React — Recibir mensajes](#integración-con-react--recibir-mensajes)
-  - [Integración con React — Enviar mensajes](#integración-con-react--enviar-mensajes)
-  - [Código completo: envío y recepción en React](#código-completo-envío-y-recepción-en-react)
-
----
-
-### El problema del DOM manual
-
-Con HTML y JavaScript puro, cada vez que el usuario interactúa con la página hay que actualizar el DOM manualmente:
-
-```javascript
-// JavaScript puro
-const lista = document.getElementById("lista");
-const nuevoItem = document.createElement("li");
-nuevoItem.textContent = "Sensor A";
-lista.appendChild(nuevoItem);
-```
-
-Esto funciona para páginas simples, pero cuando la interfaz crece —múltiples componentes, datos que cambian, eventos encadenados— el código se vuelve difícil de mantener.
-
-### Qué es React
-
-React es una librería de JavaScript creada por Meta que resuelve este problema. En lugar de manipular el DOM directamente, describes cómo debería verse la interfaz en función de los datos, y React se encarga de actualizar lo que sea necesario.
-
-> En React no dices "agrega este elemento". Dices "cuando los datos sean así, muestra esto".
-
-### Qué es Vite
-
-Vite es la herramienta que usamos para crear y ejecutar proyectos de React. Es más rápida y simple que las alternativas anteriores. Se encarga de:
-
-- Crear la estructura inicial del proyecto
-- Ejecutar un servidor local de desarrollo
-- Compilar el proyecto para producción
-
----
-
-## Módulo 2 — Configuración con Vite
-
-### Crear el proyecto
-
-```bash
-npm create vite@latest mi-proyecto -- --template react
-cd mi-proyecto
-npm install
-npm run dev
-```
-
-### Estructura del proyecto
-
-```
-mi-proyecto/
-├── public/          # Archivos estáticos
-├── src/
-│   ├── App.jsx      # Componente raíz
-│   ├── main.jsx     # Punto de entrada
-│   └── index.css    # Estilos globales
-├── index.html
-└── package.json
-```
-
-Los archivos que más vamos a editar son los que están dentro de `src/`. En particular, `App.jsx` es donde empieza todo.
-
-### Primer vistazo a `main.jsx`
-
-```jsx
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
-
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
-```
-
-Este archivo conecta React con el HTML. Le dice a React que tome el elemento con `id="root"` del `index.html` y lo controle desde ahí.
-
----
-
-## Módulo 3 — Componentes y JSX
-
-### Qué es un componente
-
-Un componente es una función de JavaScript que retorna lo que se va a mostrar en pantalla. Es la unidad básica de React: todo en una aplicación React es un componente.
-
-```jsx
-function Saludo() {
-  return <h1>Hola desde React</h1>
-}
-```
-
-### JSX
-
-JSX es la sintaxis que parece HTML pero está dentro de JavaScript. React la convierte al código que el navegador entiende.
-
-```jsx
-// Esto es JSX
-function Tarjeta() {
-  return (
-    <div>
-      <h2>Sensor A</h2>
-      <p>Temperatura</p>
-    </div>
-  )
-}
-```
-
-#### Reglas importantes de JSX
-
-| Regla | Ejemplo correcto |
-|---|---|
-| Solo un elemento raíz | `<div>...</div>` o `<>...</>` |
-| Las clases se escriben como `className` | `<div className="tarjeta">` |
-| Las etiquetas siempre se cierran | `<input />` |
-| Las expresiones van entre llaves | `<p>{nombre}</p>` |
-
-### Usar un componente dentro de otro
-
-```jsx
-function App() {
-  return (
-    <div>
-      <Tarjeta />
-      <Tarjeta />
-    </div>
-  )
-}
-```
-
-Cada vez que escribes `<Tarjeta />`, React ejecuta esa función y muestra su resultado.
-
----
-
-## Módulo 4 — Props y listas
-
-### Qué son las props
-
-Las props son los datos que un componente padre le pasa a un componente hijo. Funcionan como los atributos en HTML, pero pueden ser cualquier valor de JavaScript.
-
-```jsx
-// Componente hijo: recibe props
-function Tarjeta(props) {
-  return (
-    <div>
-      <h2>{props.nombre}</h2>
-      <p>{props.tipo}</p>
-    </div>
-  )
-}
-
-// Componente padre: pasa props
-function App() {
-  return (
-    <div>
-      <Tarjeta nombre="Sensor A" tipo="Temperatura" />
-      <Tarjeta nombre="Sensor B" tipo="Humedad" />
-    </div>
-  )
-}
-```
-
-También se pueden desestructurar directamente:
-
-```jsx
-function Tarjeta({ nombre, tipo }) {
-  return (
-    <div>
-      <h2>{nombre}</h2>
-      <p>{tipo}</p>
-    </div>
-  )
-}
-```
-
-### Renderizar listas con `.map()`
-
-Cuando tenemos un arreglo de datos, usamos `.map()` para convertir cada elemento en un componente. React requiere que cada elemento tenga un `key` único.
-
-```jsx
-const dispositivos = [
-  { id: 1, nombre: "Sensor A", tipo: "Temperatura" },
-  { id: 2, nombre: "Sensor B", tipo: "Humedad" },
-  { id: 3, nombre: "Sensor C", tipo: "Presión" },
-]
-
-function App() {
-  return (
-    <div>
-      {dispositivos.map((dispositivo) => (
-        <Tarjeta
-          key={dispositivo.id}
-          nombre={dispositivo.nombre}
-          tipo={dispositivo.tipo}
-        />
-      ))}
-    </div>
-  )
-}
-```
-
-> La prop `key` no se muestra en pantalla. React la usa internamente para saber qué elementos actualizar cuando los datos cambian.
-
----
-
-## Módulo 5 — Estado con `useState`
-
-### Por qué no funcionan las variables normales
-
-```jsx
-// Esto NO funciona
-function Contador() {
-  let contador = 0
-
-  function incrementar() {
-    contador = contador + 1
-    // React no sabe que el valor cambió, no actualiza la pantalla
-  }
-
-  return <button onClick={incrementar}>{contador}</button>
-}
-```
-
-El problema es que React solo actualiza la pantalla cuando detecta un cambio en el **estado**. Una variable normal no dispara esa detección.
-
-### `useState`
-
-`useState` es la herramienta de React para manejar valores que cambian en el tiempo.
-
-```jsx
-import { useState } from 'react'
-
-function Contador() {
-  const [contador, setContador] = useState(0)
-
-  function incrementar() {
-    setContador(contador + 1)  // React detecta el cambio y re-renderiza
-  }
-
-  return <button onClick={incrementar}>{contador}</button>
-}
-```
-
-#### Anatomía de `useState`
-
-```jsx
-const [valor, setValor] = useState(valorInicial)
-//     |       |                   |
-//     |       |                   Valor con el que empieza
-//     |       Función para cambiar el valor
-//     El valor actual
-```
-
-### Manejar un input con estado
-
-```jsx
-function Formulario() {
-  const [nombre, setNombre] = useState("")
-
-  return (
-    <input
-      value={nombre}
-      onChange={(e) => setNombre(e.target.value)}
-      placeholder="Nombre del dispositivo"
-    />
-  )
-}
-```
-
-El estado `nombre` siempre refleja lo que el usuario escribe, y el input siempre muestra el estado actual. Este patrón se llama **componente controlado**.
-
----
-
-## Módulo 6 — Mini-proyecto: Chat
-
-Un input y un botón. Cada mensaje enviado se acumula en pantalla como una ventana de chat.
-
-```jsx
-import { useState } from 'react'
-
-function App() {
-  const [mensajes, setMensajes] = useState([])
-  const [texto, setTexto] = useState("")
-
-  function enviar() {
-    if (texto === "") return
-    setMensajes([...mensajes, texto])
-    setTexto("")
-  }
-
-  return (
-    <div>
-      {mensajes.map((msg, i) => (
-        <p key={i}>{msg}</p>
-      ))}
-      <input
-        value={texto}
-        onChange={(e) => setTexto(e.target.value)}
-        placeholder="Escribe un mensaje"
-      />
-      <button onClick={enviar}>Enviar</button>
-    </div>
-  )
-}
-
-export default App
-```
-
-### Puntos clave del mini-proyecto
-
-| Concepto | Dónde aparece |
-|---|---|
-| `useState` con arreglo | `const [mensajes, setMensajes] = useState([])` |
-| Spread operator para agregar | `setMensajes([...mensajes, texto])` |
-| Limpiar el input tras enviar | `setTexto("")` |
-| Renderizar la lista | `.map((msg, i) => <p key={i}>{msg}</p>)` |
-
----
-
-## Bonus — `useEffect`
-
-`useEffect` permite ejecutar código cuando algo cambia, o cuando el componente aparece por primera vez en pantalla. Es útil para cargar datos desde una API, entre otras cosas.
-
-```jsx
-import { useState, useEffect } from 'react'
-
-function App() {
-  const [dispositivos, setDispositivos] = useState([])
-
-  // Se ejecuta una vez cuando el componente se monta
-  useEffect(() => {
-    fetch("https://mi-api.com/dispositivos")
-      .then((res) => res.json())
-      .then((data) => setDispositivos(data))
-  }, [])  // El arreglo vacío significa "solo al montar"
-
-  return (
-    <div>
-      {dispositivos.map((d) => (
-        <Tarjeta key={d.id} nombre={d.nombre} tipo={d.tipo} />
-      ))}
-    </div>
-  )
-}
-```
-
-### Cuándo usar `useEffect`
-
-| Segundo argumento | Cuándo se ejecuta |
-|---|---|
-| `[]` | Solo al montar el componente |
-| `[valor]` | Al montar y cada vez que `valor` cambia |
-| Sin segundo argumento | En cada re-render (raramente útil) |
-
----
-
-## Resumen de conceptos
-
-| Concepto | Para qué sirve |
-|---|---|
-| Componente | Función que retorna JSX; unidad básica de React |
-| JSX | Sintaxis parecida a HTML que se escribe dentro de JavaScript |
-| Props | Datos que el padre le pasa al hijo |
-| `useState` | Maneja valores que cambian y dispara re-renders |
-| `useEffect` | Ejecuta código en respuesta a montaje o cambios |
-| `.map()` | Convierte un arreglo de datos en arreglo de componentes |
-| `.filter()` | Crea un nuevo arreglo sin el elemento eliminado |
-
----
-
-## Módulo 7 — MQTT
-
-### Qué es MQTT
-
-MQTT es un protocolo de mensajería ligero pensado para dispositivos IoT. Funciona con un modelo **publicar / suscribir**:
-
-- Los dispositivos **publican** mensajes en un *topic* (ej: `sensores/temperatura`)
-- Otros dispositivos o aplicaciones **se suscriben** a ese topic y reciben los mensajes
-- Un servidor central llamado **broker** se encarga de distribuirlos
-
-```
-[Sensor] --publica--> [Broker] --entrega--> [App React]
-                                --entrega--> [Otro cliente]
-```
-
-En esta sección usaremos el broker público `broker.hivemq.com`, que no requiere cuenta ni configuración.
-
----
-
-### Prueba rápida con Node.js
-
-Antes de tocar React, vamos a verificar que todo funciona desde la terminal con un script simple.
-
-**Instalar la librería:**
-
-```bash
-npm install mqtt
-```
-
-**Crear el archivo `mqtt.js`:**
-
-> Asegúrate de tener `"type": "module"` en tu `package.json`, o guarda el archivo como `mqtt.mjs`.
-
-```js
-import mqtt from 'mqtt'
-
-const BROKER = 'mqtt://broker.hivemq.com'
-const TOPIC  = 'test/101/beta'
-
-const client = mqtt.connect(BROKER)
-
-client.on('connect', () => {
-  console.log('✅ Conectado al broker')
-
-  // Suscribirse para recibir mensajes
-  client.subscribe(TOPIC, () => {
-    console.log(`📡 Suscrito a: ${TOPIC}`)
-  })
-
-  // Publicar un mensaje de prueba después de conectarse
-  client.publish(TOPIC, 'Hola desde Node.js')
-  console.log('📤 Mensaje enviado')
-})
-
-client.on('message', (topic, message) => {
-  console.log(`📨 Mensaje recibido en [${topic}]: ${message.toString()}`)
-})
-```
-
-**Ejecutar:**
-
-```bash
-node mqtt.js
-```
-
-Deberías ver en consola algo como:
-
-```
-✅ Conectado al broker
-📡 Suscrito a: test/101/beta
-📤 Mensaje enviado
-📨 Mensaje recibido en [test/101/beta]: Hola desde Node.js
-```
-
 > El cliente recibe su propio mensaje porque también está suscrito al mismo topic. Esto es normal en MQTT.
 
 ---
@@ -655,3 +182,231 @@ export default App
 | `client.on('message', fn)` | Listener que se ejecuta al llegar un mensaje |
 | `useRef` | Guarda el cliente MQTT sin provocar re-renders |
 | `wss://` | Protocolo necesario para MQTT desde el navegador |
+
+---
+
+## Módulo 8 — Peticiones HTTP con Axios
+
+### Qué es Axios
+
+Axios es una librería de JavaScript para hacer peticiones HTTP desde el navegador o desde Node.js. Es más cómoda que el `fetch` nativo porque:
+
+- Convierte la respuesta a JSON automáticamente
+- Tiene mejor manejo de errores
+- El código es más legible
+
+### Instalar Axios
+
+```bash
+npm install axios
+```
+
+### GET — Obtener datos
+
+Una petición **GET** se usa para **pedir datos** a un servidor sin modificar nada.
+
+```jsx
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+
+function App() {
+  const [usuarios, setUsuarios] = useState([])
+
+  useEffect(() => {
+    axios({
+      method: 'GET',                                        // Método HTTP explícito
+      url: 'https://jsonplaceholder.typicode.com/users',
+    })
+      .then((respuesta) => {
+        setUsuarios(respuesta.data)
+      })
+      .catch((error) => {
+        console.error('Error en GET:', error)
+      })
+  }, [])
+
+  return (
+    <div>
+      <h2>Lista de usuarios</h2>
+      {usuarios.map((u) => (
+        <p key={u.id}>{u.name} — {u.email}</p>
+      ))}
+    </div>
+  )
+}
+
+export default App
+```
+
+> **`jsonplaceholder.typicode.com`** es una API pública de prueba. No necesita cuenta ni token, devuelve datos falsos listos para practicar.
+
+#### Qué devuelve Axios en un GET
+
+```js
+respuesta.data    // el cuerpo de la respuesta (ya convertido a objeto JS)
+respuesta.status  // código HTTP, ej: 200
+respuesta.headers // cabeceras de la respuesta
+```
+
+---
+
+### POST — Enviar datos
+
+Una petición **POST** se usa para **enviar datos nuevos** al servidor, por ejemplo para crear un registro.
+
+```jsx
+import { useState } from 'react'
+import axios from 'axios'
+
+function App() {
+  const [nombre, setNombre] = useState('')
+  const [respuesta, setRespuesta] = useState(null)
+
+  const crearUsuario = () => {
+    if (!nombre) return
+
+    axios({
+      method: 'POST',                                         // Método HTTP explícito
+      url: 'https://jsonplaceholder.typicode.com/users',
+      data: {                                                 // Cuerpo de la petición
+        name: nombre,
+        email: `${nombre.toLowerCase()}@test.com`,
+      },
+    })
+      .then((respuesta) => {
+        setRespuesta(respuesta.data)
+        setNombre('')
+      })
+      .catch((error) => {
+        console.error('Error en POST:', error)
+      })
+  }
+
+  return (
+    <div>
+      <h2>Crear usuario</h2>
+      <input
+        value={nombre}
+        onChange={(e) => setNombre(e.target.value)}
+        placeholder="Nombre del usuario"
+      />
+      <button onClick={crearUsuario}>Crear</button>
+
+      {respuesta && (
+        <div>
+          <h3>Respuesta del servidor:</h3>
+          <p>ID asignado: {respuesta.id}</p>
+          <p>Nombre: {respuesta.name}</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default App
+```
+
+> En `jsonplaceholder`, el POST no guarda realmente el dato, pero sí devuelve una respuesta simulada con un `id` asignado. Es suficiente para ver cómo funciona el flujo completo.
+
+---
+
+### GET vs POST — Diferencias clave
+
+| Característica | GET | POST |
+|---|---|---|
+| Para qué sirve | Pedir / leer datos | Enviar / crear datos |
+| Dónde van los datos | En la URL (query params) | En el cuerpo (`data`) |
+| Se usa en Axios como | `method: 'GET'` | `method: 'POST'` |
+| Respuesta típica | Lista o un objeto | El objeto recién creado |
+
+---
+
+### Código combinado: GET y POST en el mismo componente
+
+```jsx
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+
+const URL_BASE = 'https://jsonplaceholder.typicode.com/posts'
+
+function App() {
+  const [posts, setPosts]   = useState([])
+  const [titulo, setTitulo] = useState('')
+  const [cuerpo, setCuerpo] = useState('')
+
+  // GET al montar el componente
+  useEffect(() => {
+    axios({
+      method: 'GET',
+      url: URL_BASE,
+    }).then((res) => {
+      setPosts(res.data.slice(0, 5))  // solo los primeros 5
+    })
+  }, [])
+
+  // POST al hacer clic en "Publicar"
+  const publicar = () => {
+    if (!titulo || !cuerpo) return
+
+    axios({
+      method: 'POST',
+      url: URL_BASE,
+      data: {
+        title: titulo,
+        body: cuerpo,
+        userId: 1,
+      },
+    }).then((res) => {
+      setPosts((prev) => [res.data, ...prev])  // agrega al inicio de la lista
+      setTitulo('')
+      setCuerpo('')
+    })
+  }
+
+  return (
+    <div style={{ maxWidth: '500px', margin: '40px auto', fontFamily: 'sans-serif' }}>
+      <h1>Posts</h1>
+
+      {/* Formulario POST */}
+      <h2>Nuevo post</h2>
+      <input
+        value={titulo}
+        onChange={(e) => setTitulo(e.target.value)}
+        placeholder="Título"
+        style={{ display: 'block', width: '100%', marginBottom: '8px', padding: '8px' }}
+      />
+      <textarea
+        value={cuerpo}
+        onChange={(e) => setCuerpo(e.target.value)}
+        placeholder="Contenido"
+        style={{ display: 'block', width: '100%', marginBottom: '8px', padding: '8px' }}
+      />
+      <button onClick={publicar}>Publicar (POST)</button>
+
+      {/* Lista GET */}
+      <h2>Posts existentes (GET)</h2>
+      {posts.map((p) => (
+        <div key={p.id} style={{ background: '#f0f0f0', padding: '8px', marginBottom: '8px', borderRadius: '4px' }}>
+          <strong>{p.title}</strong>
+          <p>{p.body}</p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+export default App
+```
+
+### Resumen del módulo
+
+| Concepto | Qué hace |
+|---|---|
+| `npm install axios` | Instala la librería |
+| `import axios from 'axios'` | La importa en el componente |
+| `method: 'GET'` | Declara explícitamente el método HTTP |
+| `method: 'POST'` | Declara explícitamente el método HTTP |
+| `url` | Dirección del endpoint |
+| `data` | Cuerpo del POST (lo que se envía) |
+| `respuesta.data` | Lo que devuelve el servidor |
+| `.catch(error)` | Maneja errores de red o del servidor |
