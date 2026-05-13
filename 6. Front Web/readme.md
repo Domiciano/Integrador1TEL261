@@ -1,7 +1,6 @@
 # Introducción a React con Vite
 
 ## Índice
-
 - [El problema del DOM manual](#el-problema-del-dom-manual)
 - [Qué es React](#qué-es-react)
 - [Qué es Vite](#qué-es-vite)
@@ -11,6 +10,8 @@
 - [Módulo 5 — Estado con `useState`](#módulo-5--estado-con-usestate)
 - [Módulo 6 — Mini-proyecto: Chat](#módulo-6--mini-proyecto-chat)
 - [Módulo 7 — MQTT](#módulo-7--mqtt)
+- [Módulo 8 — Peticiones HTTP con Axios](#módulo-8--peticiones-http-con-axios)
+- [Módulo 9 — CORS en FastAPI](#módulo-9--cors-en-fastapi)
 
 ---
 
