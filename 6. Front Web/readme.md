@@ -850,15 +850,3 @@ app.add_middleware(
     allow_headers=["Content-Type", "Authorization"],
 )
 ```
-
----
-
-### Resumen del módulo
-
-| Concepto | Qué hace |
-|---|---|
-| CORS | Mecanismo del navegador que controla qué orígenes pueden hacer peticiones |
-| `CORSMiddleware` | Middleware de FastAPI que configura las cabeceras CORS |
-| `allow_origins=["*"]` | Permite cualquier origen (solo recomendado en desarrollo) |
-| `allow_methods=["*"]` | Permite todos los métodos HTTP |
-| `allow_headers=["*"]` | Permite todas las cabeceras |
