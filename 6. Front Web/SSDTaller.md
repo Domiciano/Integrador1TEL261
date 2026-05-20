@@ -89,17 +89,7 @@ export default function SensorList() {
         fetchSensors();
     }, []);
 
-    // Effect handler: declarado adentro del efecto, se ejecuta cuando cambia selected
-    useEffect(() => {
-        if (!selected) return;
-
-        async function fetchReadings() {
-            let data = await getSensorReadings(selected);
-            setReadings(data);
-        }
-        fetchReadings();
-    }, [selected]);
-
+    
     // Event handler: declarado en el cuerpo del componente, conectado al JSX
     function handleSelectSensor(serial) {
         setSelected(serial);
