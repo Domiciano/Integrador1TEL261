@@ -296,31 +296,6 @@ Defects: none
 - Your feedback must be specific enough that spec-writer can act on it
   without asking clarifying questions.
 ```
- 
-### El bucle escritor-critico
- 
-```
-[Tu prompt inicial]
-       |
-       v
-  spec-writer genera la spec
-       |
-       v
-  spec-critic la revisa
-       |
-    PASS? --> entregar tareas al agente de construccion
-       |
-    FAIL? --> volver a spec-writer con el feedback adjunto (una sola vez)
-       |
-       v
-  spec-writer reescribe con las correcciones
-       |
-       v
-  spec lista para construccion (sin segunda revision)
-```
- 
-El feedback de `spec-critic` debe ir pegado al final del prompt que le das a `spec-writer` en la segunda pasada, bajo el titulo `Feedback a incorporar:`.
- 
 
 
 
