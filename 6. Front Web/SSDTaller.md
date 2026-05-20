@@ -37,32 +37,94 @@ Explora los endpoints antes de escribir cualquier spec. Necesitas entender la fo
 
 El proyecto usa React. Toda la logica de estado y efectos secundarios se maneja exclusivamente con `useState` y `useEffect`. No se permite el uso de librerias adicionales de estado o data fetching.
 
-Los componentes siguen este patron sin excepcion:
+### Capa de datos: servicios con axios
+
+Las llamadas HTTP viven en archivos `.js` separados dentro de `src/services/`. Cada archivo exporta funciones nombradas. El componente nunca llama a axios directamente.
+
+```javascript
+// src/services/sensorService.js
+import axios from "axios";
+
+const BASE_URL = "https://facelogprueba.firebaseio.com/api";
+
+export async function getSensors() {
+    let response = await axios.get(`${BASE_URL}/sensors.json`);
+    return response.data;
+}
+
+export async function getSensorReadings(serial) {
+    let response = await axios.get(
+        `${BASE_URL}/data/sensors/${serial}/readings/readings.json`
+    );
+    return response.data;
+}
+```
+
+### Componentes: tres tipos de funciones internas
+
+Dentro de un componente existen exactamente tres tipos de funciones, con roles distintos y no intercambiables:
+
+**1. Effect handlers**: se declaran dentro del `useEffect` donde se usan. Manejan la logica que ocurre al montar el componente o cuando cambia una dependencia. No se llaman desde el JSX.
+
+**2. Event handlers**: se declaran dentro del cuerpo del componente, fuera de cualquier efecto. Se conectan a eventos del JSX (onClick, onChange, onSubmit, etc.).
+
+**3. Funciones de servicio**: viven en `src/services/` y son importadas. Nunca se definen dentro del componente.
 
 ```javascript
 import { useState, useEffect } from "react";
-import { getRequest } from "../services/httpService";
+import { getSensors, getSensorReadings } from "../services/sensorService";
 
-export default function NombreComponente() {
+export default function SensorList() {
 
-    const [data, setData] = useState(null);
+    const [sensors, setSensors] = useState([]);
+    const [selected, setSelected] = useState(null);
+    const [readings, setReadings] = useState(null);
 
+    // Effect handler: declarado adentro del efecto, se ejecuta al montar
     useEffect(() => {
-        handleFetch();
+        async function fetchSensors() {
+            let data = await getSensors();
+            setSensors(data);
+        }
+        fetchSensors();
     }, []);
 
-    async function handleFetch() {
-        let response = await getRequest("URL_AQUI");
-        setData(response.data);
+    // Effect handler: declarado adentro del efecto, se ejecuta cuando cambia selected
+    useEffect(() => {
+        if (!selected) return;
+
+        async function fetchReadings() {
+            let data = await getSensorReadings(selected);
+            setReadings(data);
+        }
+        fetchReadings();
+    }, [selected]);
+
+    // Event handler: declarado en el cuerpo del componente, conectado al JSX
+    function handleSelectSensor(serial) {
+        setSelected(serial);
     }
 
     return (
         <>
-            {/* JSX aqui */}
+            {sensors.map(sensor => (
+                <button key={sensor.serial} onClick={() => handleSelectSensor(sensor.serial)}>
+                    {sensor.name}
+                </button>
+            ))}
+            {readings && <pre>{JSON.stringify(readings, null, 2)}</pre>}
         </>
     );
 }
 ```
+
+### Reglas que el agente debe respetar
+
+- `axios` solo se importa en archivos de `src/services/`. Nunca en un componente.
+- Los effect handlers son siempre `async` y se declaran dentro del `useEffect`, no fuera.
+- Los event handlers se nombran con el prefijo `handle` seguido de la accion en PascalCase: `handleSelectSensor`, `handleSubmit`, `handleDelete`.
+- Un componente no llama a otro servicio que no sea el que le corresponde por responsabilidad.
+- No se usan `.then()` ni `.catch()`. Toda la logica asincrona usa `async/await`.
 
 Este estilo debe estar documentado en un archivo `CODE_STYLE.md` en la raiz del proyecto, y debe ser referenciado desde tu `GEMINI.md` o `CLAUDE.md` para que el agente lo respete en todo momento.
 
