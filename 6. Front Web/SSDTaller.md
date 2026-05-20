@@ -242,25 +242,3 @@ Entrega las specs al agente tarea por tarea, en orden de dependencia. No entregu
 **Paso 6: Revisar**
 Al final, verifica que cada criterio de aceptacion de todas las specs se cumpla en la aplicacion corriendo.
 
----
-
-## Entregables
-
-Al finalizar el taller debes entregar:
-
-- `CODE_STYLE.md` con el patron de componentes documentado
-- `GEMINI.md` o `CLAUDE.md` configurado y referenciando el code style
-- `API_NOTES.md` con observaciones sobre los endpoints
-- Una spec por cada pantalla o flujo principal (generadas con spec-writer, revisadas por ti)
-- El proyecto React corriendo con las tres pantallas funcionales
-- Capturas o grabacion breve demostrando el flujo completo
-
----
-
-## Criterios de evaluacion
-
-- Las specs tienen criterios de aceptacion binarios y no contienen detalles de implementacion en la seccion funcional.
-- El codigo sigue el patron de componentes sin excepcion.
-- El agente estuvo confinado al estilo definido en los archivos de configuracion.
-- El flujo completo funciona: login, lista de sensores, grafica de lecturas.
-- Los supuestos marcados por spec-writer fueron revisados y ajustados donde correspondia.
