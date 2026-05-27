@@ -165,10 +165,10 @@ sudo curl -SL https://github.com/docker/compose/releases/latest/download/docker-
   -o /usr/local/lib/docker/cli-plugins/docker-compose
 sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
 
-sudo mkdir -p /usr/local/lib/docker/cli-plugins
-sudo curl -SL https://github.com/docker/buildx/releases/latest/download/buildx-linux-amd64 \
-  -o /usr/local/lib/docker/cli-plugins/docker-buildx
-sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-buildx
+sudo mkdir -p /usr/libexec/docker/cli-plugins
+sudo curl -L https://github.com/docker/buildx/releases/download/v0.25.0/buildx-v0.25.0.linux-amd64 \
+  -o /usr/libexec/docker/cli-plugins/docker-buildx
+sudo chmod +x /usr/libexec/docker/cli-plugins/docker-buildx
 
 ```
 
