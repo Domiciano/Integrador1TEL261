@@ -175,7 +175,10 @@ sudo chmod +x /usr/libexec/docker/cli-plugins/docker-buildx
 Verifica la instalacion:
 
 ```bash
+sudo systemctl restart docker
+
 docker compose version
+docker buildx version
 ```
 
 ---
