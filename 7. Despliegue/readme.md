@@ -84,7 +84,7 @@ Abre una terminal y ejecuta:
 ```bash
 chmod 400 /ruta/a/tu/mi-clave-ec2.pem
 
-ssh -i /ruta/a/tu/mi-clave-ec2.pem ec2-user@<IP_PUBLICA_DE_TU_INSTANCIA>
+ssh -i EC2Tuto.pem ec2-user@98.84.52.218
 ```
 
 Reemplaza `<IP_PUBLICA_DE_TU_INSTANCIA>` con la IP publica que aparece en la consola de EC2 (columna **Public IPv4 address**).
